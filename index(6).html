@@ -19,83 +19,163 @@
     body {
       min-height: 100vh;
       background:
-        radial-gradient(circle at top, rgba(37,99,235,0.18), transparent 30%),
-        radial-gradient(circle at bottom right, rgba(239,68,68,0.14), transparent 30%),
+        radial-gradient(circle at top, rgba(59,130,246,0.18), transparent 32%),
+        radial-gradient(circle at right bottom, rgba(16,185,129,0.08), transparent 28%),
+        radial-gradient(circle at left bottom, rgba(239,68,68,0.12), transparent 32%),
         #020617;
     }
-    .screen {
-      min-height: 100vh;
-      display: none;
-      padding: 16px;
-    }
+    .screen { min-height: 100vh; display: none; padding: 14px; }
     .screen.active { display: block; }
-    .container {
-      max-width: 1500px;
-      margin: 0 auto;
-    }
+    .container { max-width: 1540px; margin: 0 auto; }
     .card {
       background: rgba(15, 23, 42, 0.92);
-      border: 1px solid rgba(148, 163, 184, 0.22);
-      border-radius: 26px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 28px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.38);
     }
     .title {
-      font-size: clamp(32px, 6vw, 60px);
+      font-size: clamp(34px, 6vw, 62px);
       font-weight: 900;
       text-align: center;
-      letter-spacing: -0.03em;
-      margin: 8px 0 10px;
+      letter-spacing: -0.04em;
+      margin: 0;
     }
     .subtitle {
-      text-align: center;
       color: #cbd5e1;
-      margin-bottom: 26px;
-    }
-    .grid-2 {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 18px;
-    }
-    .panel {
-      padding: 20px;
-    }
-    .panel h2, .panel h3 {
-      margin: 0 0 14px;
-      font-size: 24px;
-      font-weight: 900;
-    }
-    .input {
-      width: 100%;
-      background: #020617;
-      color: white;
-      border: 1px solid #475569;
-      border-radius: 16px;
-      padding: 14px 16px;
-      font-size: 16px;
-      outline: none;
+      text-align: center;
+      margin-top: 8px;
+      line-height: 1.5;
     }
     .btn {
       border: none;
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 14px 18px;
       font-weight: 900;
       cursor: pointer;
       color: white;
-      transition: transform 0.08s ease, filter 0.12s ease;
+      transition: transform .08s ease, filter .12s ease, background .12s ease;
     }
-    .btn:active { transform: scale(0.99); }
+    .btn:active { transform: scale(.99); }
+    .btn:hover { filter: brightness(1.08); }
     .btn-blue { background: #2563eb; }
     .btn-green { background: #059669; }
     .btn-gray { background: #1e293b; }
     .btn-gold { background: #f59e0b; color: #111827; }
-    .btn:hover { filter: brightness(1.08); }
+    .btn-red { background: #dc2626; }
     .full { width: 100%; }
-    .recent-wrap {
+    .hero-shell {
+      max-width: 1180px;
+      margin: 4vh auto 0;
+      padding: 22px;
+      overflow: hidden;
+      position: relative;
+    }
+    .hero-shell::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(circle at 15% 15%, rgba(96,165,250,0.25), transparent 18%),
+        radial-gradient(circle at 82% 20%, rgba(52,211,153,0.16), transparent 18%),
+        radial-gradient(circle at 50% 100%, rgba(59,130,246,0.14), transparent 28%);
+      pointer-events: none;
+    }
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.08fr 0.92fr;
+      gap: 20px;
+      align-items: stretch;
+      position: relative;
+      z-index: 1;
+    }
+    .hero-left {
+      padding: 30px;
+      min-height: 520px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background:
+        linear-gradient(140deg, rgba(30,41,59,0.86), rgba(15,23,42,0.95)),
+        #0f172a;
+      border-radius: 26px;
+      border: 1px solid rgba(148,163,184,0.18);
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(37,99,235,0.16);
+      border: 1px solid rgba(96,165,250,0.55);
+      color: #bfdbfe;
+      font-weight: 900;
+      margin-bottom: 18px;
+      width: fit-content;
+    }
+    .hero-desc {
+      margin-top: 18px;
+      color: #cbd5e1;
+      line-height: 1.65;
+      max-width: 620px;
+      font-size: 17px;
+    }
+    .hero-pills {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 10px;
+      gap: 10px;
+      margin-top: 20px;
     }
+    .pill {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: rgba(30,41,59,0.92);
+      border: 1px solid rgba(148,163,184,0.16);
+      color: #e2e8f0;
+      font-weight: 800;
+      font-size: 14px;
+    }
+    .hero-right {
+      padding: 22px;
+      background: rgba(15,23,42,0.9);
+      border-radius: 26px;
+      border: 1px solid rgba(148,163,184,0.18);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .input-label {
+      font-size: 14px;
+      color: #cbd5e1;
+      margin-bottom: 8px;
+      font-weight: 700;
+    }
+    .input-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+    .input {
+      width: 100%;
+      background: linear-gradient(180deg, rgba(2,6,23,0.96), rgba(15,23,42,0.94));
+      color: white;
+      border: 1px solid rgba(96,165,250,0.2);
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.02), 0 0 0 0 rgba(59,130,246,0.0);
+      border-radius: 18px;
+      padding: 16px 18px;
+      font-size: 17px;
+      outline: none;
+      transition: border-color .12s ease, box-shadow .12s ease;
+    }
+    .input:focus {
+      border-color: rgba(96,165,250,0.78);
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.12);
+    }
+    .section-head {
+      font-size: 22px;
+      font-weight: 900;
+      margin-bottom: 14px;
+    }
+    .recent-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
     .recent-btn {
       padding: 8px 12px;
       border-radius: 999px;
@@ -103,6 +183,7 @@
       border: none;
       color: white;
       cursor: pointer;
+      font-weight: 700;
     }
     .topbar {
       display: flex;
@@ -112,12 +193,7 @@
       flex-wrap: wrap;
       margin-bottom: 16px;
     }
-    .badge-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      align-items: center;
-    }
+    .badge-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
     .badge {
       padding: 10px 14px;
       border-radius: 999px;
@@ -128,11 +204,12 @@
     }
     .badge.blue { background: rgba(37,99,235,0.2); border-color: rgba(96,165,250,0.8); color: #bfdbfe; }
     .badge.red { background: rgba(239,68,68,0.16); border-color: rgba(252,165,165,0.8); color: #fecaca; }
-    .lobby-grid {
+    .menu-grid {
       display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
+      grid-template-columns: 1fr 1fr;
       gap: 18px;
     }
+    .panel { padding: 20px; }
     .map-preview {
       position: relative;
       aspect-ratio: 16 / 8;
@@ -140,55 +217,35 @@
       overflow: hidden;
       border: 1px solid rgba(148,163,184,0.25);
       background: radial-gradient(circle at center, #1e3a8a 0%, #0f172a 46%, #111827 100%);
+      margin-top: 12px;
     }
     .map-preview .midline {
-      position: absolute;
-      left: 50%;
-      top: 0;
-      bottom: 0;
-      width: 4px;
-      transform: translateX(-50%);
-      background: rgba(255,255,255,0.34);
+      position: absolute; left: 50%; top: 0; bottom: 0; width: 4px;
+      transform: translateX(-50%); background: rgba(255,255,255,0.34);
     }
     .safe-icon {
-      position: absolute;
-      top: 50%;
-      width: 100px;
-      height: 100px;
-      border-radius: 24px;
-      transform: translateY(-50%);
-      border: 4px solid rgba(255,255,255,0.65);
+      position: absolute; top: 50%; width: 100px; height: 100px; border-radius: 24px;
+      transform: translateY(-50%); border: 4px solid rgba(255,255,255,0.65);
       box-shadow: 0 0 28px rgba(255,255,255,0.12);
     }
     .safe-icon.left { left: 10%; background: rgba(59,130,246,0.85); }
     .safe-icon.right { right: 10%; background: rgba(239,68,68,0.85); }
-    .loading-wrap {
-      max-width: 760px;
-      margin: 10vh auto 0;
-      padding: 30px;
-    }
+    .loading-wrap { max-width: 760px; margin: 10vh auto 0; padding: 30px; }
     .bar-bg {
-      height: 26px;
-      border-radius: 999px;
-      background: #0f172a;
-      border: 1px solid rgba(148,163,184,0.25);
-      overflow: hidden;
+      height: 26px; border-radius: 999px; background: #0f172a;
+      border: 1px solid rgba(148,163,184,0.25); overflow: hidden;
     }
     .bar-fill {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #2563eb, #22d3ee, #34d399);
+      height: 100%; width: 0%; background: linear-gradient(90deg, #2563eb, #22d3ee, #34d399);
       transition: width 0.08s linear;
     }
     .battle-layout {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) 340px;
+      grid-template-columns: minmax(0, 1fr) 352px;
       gap: 14px;
       align-items: start;
     }
-    .battle-panel {
-      padding: 14px;
-    }
+    .battle-panel { padding: 14px; }
     .notice {
       background: rgba(30,41,59,0.9);
       border: 1px solid rgba(148,163,184,0.2);
@@ -197,255 +254,171 @@
       color: #e2e8f0;
       font-weight: 700;
       margin-bottom: 12px;
+      line-height: 1.45;
+    }
+    .prep-badge {
+      display: inline-flex;
+      margin-left: 8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 900;
+      background: rgba(245,158,11,0.16);
+      color: #fde68a;
+      border: 1px solid rgba(245,158,11,0.45);
+      vertical-align: middle;
     }
     .field-wrap {
-      position: relative;
-      width: 100%;
-      aspect-ratio: 1200 / 620;
-      border-radius: 28px;
-      overflow: hidden;
-      border: 2px solid rgba(148,163,184,0.2);
+      position: relative; width: 100%; aspect-ratio: 1200 / 620; border-radius: 28px;
+      overflow: hidden; border: 2px solid rgba(148,163,184,0.2);
       background: linear-gradient(90deg, rgba(29,78,216,0.18) 0%, rgba(15,23,42,1) 50%, rgba(220,38,38,0.18) 100%);
       touch-action: none;
     }
     .field-grid {
-      position: absolute;
-      inset: 0;
-      opacity: 0.38;
+      position: absolute; inset: 0; opacity: 0.38;
       background-image:
         repeating-linear-gradient(0deg, transparent 0 52px, rgba(255,255,255,0.06) 52px 53px),
         repeating-linear-gradient(90deg, transparent 0 52px, rgba(255,255,255,0.06) 52px 53px);
     }
-    .field-mid {
-      position: absolute;
-      left: 50%; top: 0; bottom: 0;
-      width: 4px;
-      transform: translateX(-50%);
-      background: rgba(255,255,255,0.34);
-    }
+    .field-mid { position: absolute; left: 50%; top: 0; bottom: 0; width: 4px; transform: translateX(-50%); background: rgba(255,255,255,0.34); }
     .zone {
-      position: absolute;
-      top: 29%;
-      width: 9%;
-      height: 42%;
-      border: 6px solid rgba(255,255,255,0.32);
-      border-radius: 28px;
+      position: absolute; top: 29%; width: 9%; height: 42%;
+      border: 6px solid rgba(255,255,255,0.32); border-radius: 28px;
     }
     .zone.left { left: 6%; }
     .zone.right { right: 6%; }
-    .safe {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      text-align: center;
-    }
+    .safe { position: absolute; transform: translate(-50%, -50%); text-align: center; }
     .safe-box {
-      width: 108px;
-      height: 108px;
-      border-radius: 24px;
-      border: 4px solid rgba(255,255,255,0.8);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 46px;
-      box-shadow: 0 0 36px rgba(255,255,255,0.14);
-      margin: 0 auto;
+      width: 108px; height: 108px; border-radius: 24px; border: 4px solid rgba(255,255,255,0.8);
+      display: flex; align-items: center; justify-content: center; font-size: 46px;
+      box-shadow: 0 0 36px rgba(255,255,255,0.14); margin: 0 auto;
     }
     .safe-box.blue { background: #3b82f6; box-shadow: 0 0 36px rgba(59,130,246,0.65); }
     .safe-box.red { background: #ef4444; box-shadow: 0 0 36px rgba(239,68,68,0.65); }
-    .safe-label {
-      margin-top: 10px;
-      font-weight: 900;
-      font-size: 18px;
-    }
+    .safe-label { margin-top: 10px; font-weight: 900; font-size: 18px; }
     .hpbar {
-      width: 170px;
-      height: 14px;
-      border-radius: 999px;
-      background: #0f172a;
-      border: 1px solid rgba(148,163,184,0.25);
-      overflow: hidden;
-      margin: 8px auto 0;
+      width: 170px; height: 14px; border-radius: 999px; background: #0f172a;
+      border: 1px solid rgba(148,163,184,0.25); overflow: hidden; margin: 8px auto 0;
     }
     .hpfill { height: 100%; }
     .hpfill.blue { background: #3b82f6; }
     .hpfill.red { background: #ef4444; }
-    .hptext {
-      font-size: 14px;
-      margin-top: 6px;
-      color: #e2e8f0;
-      font-weight: 700;
-    }
+    .hptext { font-size: 14px; margin-top: 6px; color: #e2e8f0; font-weight: 700; }
     .unit {
-      position: absolute;
-      transform: translate(-50%, -50%);
-      pointer-events: none;
-      text-align: center;
+      position: absolute; transform: translate(-50%, -50%); pointer-events: none; text-align: center;
     }
     .unit-level {
-      font-size: 14px;
-      font-weight: 900;
-      margin-bottom: -4px;
+      font-size: 14px; font-weight: 900; margin-bottom: -4px;
       text-shadow: 0 2px 2px rgba(0,0,0,0.8);
     }
     .unit-body {
-      width: 34px;
-      height: 34px;
-      border-radius: 999px;
-      border: 2px solid white;
-      box-shadow: 0 0 14px rgba(255,255,255,0.22);
-      margin: 0 auto;
+      width: 34px; height: 34px; border-radius: 999px;
+      box-shadow: 0 0 14px rgba(255,255,255,0.22); margin: 0 auto;
+      border-width: 3px; border-style: solid;
     }
     .unit-hp {
-      width: 46px;
-      height: 7px;
-      border-radius: 999px;
-      background: #020617;
-      border: 1px solid rgba(0,0,0,0.4);
-      overflow: hidden;
-      margin-top: 4px;
+      width: 46px; height: 7px; border-radius: 999px; background: #020617;
+      border: 1px solid rgba(0,0,0,0.4); overflow: hidden; margin-top: 4px;
     }
     .unit-hp-fill { height: 100%; background: #4ade80; }
-    .under-controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 12px;
-    }
-    .mini-badge {
-      padding: 12px 15px;
-      border-radius: 18px;
-      background: #1e293b;
-      font-weight: 900;
-    }
-    .side-title {
-      font-size: 28px;
-      font-weight: 900;
-      margin: 2px 0 12px;
-    }
+    .under-controls { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+    .mini-badge { padding: 12px 15px; border-radius: 18px; background: #1e293b; font-weight: 900; }
+    .side-title { font-size: 28px; font-weight: 900; margin: 2px 0 12px; }
     .game-card {
-      border: 1px solid rgba(148,163,184,0.22);
-      background: rgba(30,41,59,0.88);
-      border-radius: 24px;
-      padding: 16px;
-      margin-bottom: 12px;
+      border: 1px solid rgba(148,163,184,0.22); background: rgba(30,41,59,0.88);
+      border-radius: 24px; padding: 16px; margin-bottom: 12px;
     }
     .game-card .head {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 12px;
+      display: flex; justify-content: space-between; align-items: flex-start; gap: 12px;
     }
-    .game-card .name {
-      font-size: 22px;
-      font-weight: 900;
-    }
-    .game-card .desc {
-      color: #cbd5e1;
-      margin-top: 6px;
-      line-height: 1.45;
-    }
+    .game-card .name { font-size: 22px; font-weight: 900; }
+    .game-card .desc { color: #cbd5e1; margin-top: 6px; line-height: 1.45; }
     .cost-badge {
-      padding: 10px 14px;
-      border-radius: 18px;
-      font-weight: 900;
-      border: 1px solid rgba(148,163,184,0.22);
-      white-space: nowrap;
+      padding: 10px 14px; border-radius: 18px; font-weight: 900;
+      border: 1px solid rgba(148,163,184,0.22); white-space: nowrap;
     }
     .tip {
-      border: 1px solid rgba(148,163,184,0.2);
-      background: rgba(2,6,23,0.62);
-      border-radius: 24px;
-      padding: 16px;
-      color: #cbd5e1;
-      line-height: 1.5;
+      border: 1px solid rgba(148,163,184,0.2); background: rgba(2,6,23,0.62);
+      border-radius: 24px; padding: 16px; color: #cbd5e1; line-height: 1.5;
     }
     .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.68);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 16px;
-      z-index: 60;
+      position: fixed; inset: 0; background: rgba(0,0,0,0.68); display: none;
+      align-items: center; justify-content: center; padding: 16px; z-index: 80;
     }
     .overlay.show { display: flex; }
     .overlay-box {
-      width: min(460px, 100%);
-      background: rgba(15,23,42,0.96);
-      border: 1px solid rgba(148,163,184,0.22);
-      border-radius: 28px;
-      padding: 24px;
-      text-align: center;
-      box-shadow: 0 24px 50px rgba(0,0,0,0.45);
+      width: min(500px, 100%); background: rgba(15,23,42,0.96); border: 1px solid rgba(148,163,184,0.22);
+      border-radius: 28px; padding: 24px; text-align: center; box-shadow: 0 24px 50px rgba(0,0,0,0.45);
     }
-    .overlay-title {
-      font-size: 44px;
-      font-weight: 900;
-      margin-bottom: 10px;
-    }
-    .overlay-text {
-      color: #cbd5e1;
-      margin-bottom: 18px;
-    }
+    .overlay-title { font-size: 44px; font-weight: 900; margin-bottom: 10px; }
+    .overlay-text { color: #cbd5e1; margin-bottom: 18px; }
+    .map-modal-grid { display: grid; gap: 14px; }
 
     @media (max-width: 980px) {
-      .grid-2, .lobby-grid, .battle-layout {
-        grid-template-columns: 1fr;
-      }
+      .hero-grid, .menu-grid, .battle-layout { grid-template-columns: 1fr; }
+      .hero-left { min-height: auto; }
       .side-title { font-size: 24px; }
-      .safe-box {
-        width: 92px;
-        height: 92px;
-        font-size: 40px;
-      }
+      .safe-box { width: 92px; height: 92px; font-size: 40px; }
       .safe-label { font-size: 16px; }
       .hpbar { width: 150px; }
       .game-card .name { font-size: 20px; }
     }
-
     @media (max-width: 640px) {
       .screen { padding: 10px; }
-      .panel { padding: 16px; }
-      .title { margin-top: 12px; }
+      .hero-shell { padding: 12px; }
+      .hero-left, .hero-right, .panel { padding: 16px; }
       .badge { font-size: 12px; padding: 8px 11px; }
       .under-controls { gap: 8px; }
       .mini-badge { padding: 10px 12px; font-size: 14px; }
       .btn { padding: 12px 14px; }
       .field-wrap { border-radius: 22px; }
-      .safe-box {
-        width: 82px;
-        height: 82px;
-        border-radius: 20px;
-      }
+      .safe-box { width: 82px; height: 82px; border-radius: 20px; }
       .hpbar { width: 130px; }
-      .unit-body {
-        width: 28px;
-        height: 28px;
-      }
+      .unit-body { width: 28px; height: 28px; }
       .unit-hp { width: 40px; }
+      .overlay-title { font-size: 34px; }
     }
   </style>
 </head>
 <body>
   <section id="setupScreen" class="screen active">
-    <div class="container" style="max-width:1100px; padding-top:6vh;">
-      <div class="card panel">
-        <div class="title">금고 지키기</div>
-        <div class="subtitle">나라 이름을 만들고, 저장된 이름을 다시 불러와 전투를 시작하세요.</div>
-        <div class="grid-2">
-          <div class="card panel" style="background:rgba(30,41,59,0.75);">
-            <h2>새 나라 만들기</h2>
+    <div class="hero-shell card">
+      <div class="hero-grid">
+        <div class="hero-left">
+          <div class="hero-badge">🏦 전략 전쟁 게임</div>
+          <h1 class="title" style="text-align:left;">금고 지키기</h1>
+          <div class="subtitle" style="text-align:left; max-width:640px;">
+            금고를 성장시키고, 군사 등급을 올리고, 적 금고를 먼저 파괴하세요.
+            시작 1분은 준비시간이며, 그 뒤 본격적인 진격이 시작됩니다.
+          </div>
+          <div class="hero-desc">
+            나라 이름을 만들어 저장하고, 다시 불러와 바로 전장에 복귀할 수 있습니다.
+            금고 강화, 군사 강화, 군사 소환을 조합해서 상대 AI와 맞붙는 1 vs 1 전략 전투입니다.
+          </div>
+          <div class="hero-pills">
+            <div class="pill">1분 준비시간</div>
+            <div class="pill">공격 / 철수</div>
+            <div class="pill">등급별 군사 차이 강화</div>
+            <div class="pill">모바일 대응</div>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="section-head">나라 입장</div>
+          <div class="input-label">새 나라 만들기</div>
+          <div class="input-wrap">
             <input id="newCountryInput" class="input" placeholder="예: 청룡국" />
-            <button id="startNewBtn" class="btn btn-blue full" style="margin-top:12px;">시작하기</button>
           </div>
-          <div class="card panel" style="background:rgba(30,41,59,0.75);">
-            <h2>기존 나라 불러오기</h2>
+          <button id="startNewBtn" class="btn btn-blue full" style="margin-bottom:18px;">새 나라로 시작</button>
+
+          <div class="input-label">기존 나라 불러오기</div>
+          <div class="input-wrap">
             <input id="loadCountryInput" class="input" placeholder="저장된 나라 이름" />
-            <button id="loadBtn" class="btn btn-green full" style="margin-top:12px;">불러오기</button>
-            <div style="margin-top:14px; color:#cbd5e1; font-size:14px;">최근 나라</div>
-            <div id="recentCountries" class="recent-wrap"></div>
           </div>
+          <button id="loadBtn" class="btn btn-green full">불러오기</button>
+
+          <div style="margin-top:18px; color:#cbd5e1; font-size:14px; font-weight:700;">최근 나라</div>
+          <div id="recentCountries" class="recent-wrap"></div>
         </div>
       </div>
     </div>
@@ -461,33 +434,18 @@
         </div>
       </div>
 
-      <div class="lobby-grid">
+      <div class="menu-grid">
         <div class="card panel">
-          <h2>맵 선택</h2>
-          <div class="card panel" style="background:rgba(30,41,59,0.72); padding:16px;">
-            <div style="display:flex; justify-content:space-between; gap:12px; align-items:flex-start; flex-wrap:wrap; margin-bottom:12px;">
-              <div>
-                <div style="font-size:24px; font-weight:900;">1 vs 1 경기장</div>
-                <div style="color:#cbd5e1;">현재는 이 맵만 플레이할 수 있습니다.</div>
-              </div>
-              <div class="badge blue">기본 맵</div>
-            </div>
-            <div class="map-preview">
-              <div class="midline"></div>
-              <div class="safe-icon left"></div>
-              <div class="safe-icon right"></div>
-            </div>
-          </div>
+          <div class="section-head">맵</div>
+          <div style="color:#cbd5e1; line-height:1.55;">맵 버튼을 누르면 별도 창에서 맵을 선택할 수 있습니다.</div>
+          <button id="openMapBtn" class="btn btn-blue full" style="margin-top:18px; font-size:22px;">맵</button>
         </div>
 
-        <div class="card panel" style="display:flex; flex-direction:column; justify-content:space-between;">
-          <div>
-            <h2>출격 준비</h2>
-            <div class="game-card" style="margin-bottom:10px;">금고는 시작부터 초당 100코인을 생산합니다.</div>
-            <div class="game-card" style="margin-bottom:10px;">오른쪽 카드 3장으로 경제 강화, 군사 강화, 군사 소환을 진행합니다.</div>
-            <div class="game-card">공격! 버튼을 누르면 돌격하고, 적이 아군 진영으로 오면 자동 대응합니다.</div>
-          </div>
-          <button id="playBtn" class="btn btn-green full" style="margin-top:18px; font-size:24px; padding:16px 18px;">Play!</button>
+        <div class="card panel">
+          <div class="section-head">전투 시작</div>
+          <div style="color:#cbd5e1; line-height:1.55;">현재 선택된 맵으로 바로 전투를 시작합니다.</div>
+          <div id="selectedMapText" style="margin-top:16px; font-size:20px; font-weight:900; color:#bfdbfe;">선택 맵: 1 vs 1 경기장</div>
+          <button id="playBtn" class="btn btn-green full" style="margin-top:18px; font-size:22px;">Play!</button>
         </div>
       </div>
     </div>
@@ -518,7 +476,7 @@
             </div>
           </div>
 
-          <div id="notice" class="notice">아군 진영 아무 곳이나 눌러 군사를 소환하세요.</div>
+          <div id="notice" class="notice">아군 금고에서 군사를 소환하세요.</div>
 
           <div id="field" class="field-wrap">
             <div class="field-grid"></div>
@@ -545,9 +503,10 @@
 
           <div class="under-controls">
             <button id="attackBtn" class="btn btn-gold" style="font-size:20px;">공격!</button>
-            <button id="defendBtn" class="btn btn-gray" style="font-size:20px;">방어</button>
+            <button id="retreatBtn" class="btn btn-red" style="font-size:20px;">철수</button>
             <div id="playerCount" class="mini-badge">아군: 0명</div>
             <div id="enemyCount" class="mini-badge">적군: 0명</div>
+            <div id="prepTimerBadge" class="mini-badge">준비시간: 60초</div>
           </div>
         </div>
 
@@ -576,21 +535,21 @@
             </div>
           </button>
 
-          <div class="game-card">
+          <button id="summonBtn" class="game-card" style="width:100%; text-align:left; cursor:pointer;">
             <div class="head">
               <div>
                 <div class="name">3. 군사 소환</div>
                 <div id="summonNow" class="desc"></div>
                 <div id="summonCostText" class="desc"></div>
-                <div class="desc">왼쪽 전장 아군 구역 아무 곳이나 클릭/터치하면 배치됩니다.</div>
+                <div class="desc">누르면 아군 금고 앞에서 바로 소환됩니다.</div>
               </div>
               <div id="summonCostBadge" class="cost-badge"></div>
             </div>
-          </div>
+          </button>
 
           <div class="tip">
-            <div style="font-weight:900; color:white; margin-bottom:6px;">모바일 팁</div>
-            오른쪽 카드로 업그레이드한 뒤, 왼쪽 경기장 아군 구역을 눌러 군사를 소환하세요.
+            <div style="font-weight:900; color:white; margin-bottom:6px;">전투 흐름</div>
+            시작 1분 동안은 준비시간이라 공격이 불가능합니다. 이때 경제와 군사를 준비하고, 준비시간 종료 후 공격 또는 철수를 선택하세요.
           </div>
         </div>
       </div>
@@ -602,6 +561,29 @@
       <div id="resultTitle" class="overlay-title">승리!</div>
       <div id="resultText" class="overlay-text"></div>
       <button id="resultBackBtn" class="btn btn-green full" style="font-size:20px;">로비로 돌아가기</button>
+    </div>
+  </div>
+
+  <div id="mapOverlay" class="overlay">
+    <div class="overlay-box" style="text-align:left;">
+      <div class="section-head" style="font-size:30px; margin-bottom:14px;">맵 선택</div>
+      <div class="map-modal-grid">
+        <div class="game-card" style="margin-bottom:0;">
+          <div class="head">
+            <div>
+              <div class="name">1 vs 1 경기장</div>
+              <div class="desc">현재 선택 가능한 기본 맵입니다.</div>
+            </div>
+            <button id="selectMapBtn" class="btn btn-blue" style="padding:11px 14px;">선택</button>
+          </div>
+          <div class="map-preview">
+            <div class="midline"></div>
+            <div class="safe-icon left"></div>
+            <div class="safe-icon right"></div>
+          </div>
+        </div>
+      </div>
+      <button id="closeMapBtn" class="btn btn-gray full" style="margin-top:14px;">닫기</button>
     </div>
   </div>
 
@@ -620,27 +602,28 @@
     const SAFE_Y = FIELD_H / 2;
     const SAFE_RADIUS = 54;
     const MAX_SAFE_HP = 5200;
+    const PREP_MS = 60000;
     const TICK = 100;
 
     const RANKS = [
-      { key: 'bronze1', tier: '브론즈', level: 1, color: '#b87333', hp: 120, atk: 15, speed: 1.05 },
-      { key: 'bronze2', tier: '브론즈', level: 2, color: '#b87333', hp: 135, atk: 18, speed: 1.06 },
-      { key: 'bronze3', tier: '브론즈', level: 3, color: '#b87333', hp: 150, atk: 22, speed: 1.07 },
-      { key: 'silver1', tier: '실버', level: 1, color: '#c0c0c0', hp: 165, atk: 26, speed: 1.08 },
-      { key: 'silver2', tier: '실버', level: 2, color: '#c0c0c0', hp: 182, atk: 30, speed: 1.09 },
-      { key: 'silver3', tier: '실버', level: 3, color: '#c0c0c0', hp: 198, atk: 34, speed: 1.10 },
-      { key: 'gold1', tier: '골드', level: 1, color: '#d4af37', hp: 216, atk: 39, speed: 1.11 },
-      { key: 'gold2', tier: '골드', level: 2, color: '#d4af37', hp: 234, atk: 44, speed: 1.12 },
-      { key: 'gold3', tier: '골드', level: 3, color: '#d4af37', hp: 252, atk: 50, speed: 1.13 },
-      { key: 'platinum1', tier: '플래티넘', level: 1, color: '#82e0dd', hp: 272, atk: 56, speed: 1.14 },
-      { key: 'platinum2', tier: '플래티넘', level: 2, color: '#82e0dd', hp: 292, atk: 63, speed: 1.145 },
-      { key: 'platinum3', tier: '플래티넘', level: 3, color: '#82e0dd', hp: 312, atk: 71, speed: 1.15 },
-      { key: 'diamond1', tier: '다이아', level: 1, color: '#76baff', hp: 335, atk: 80, speed: 1.155 },
-      { key: 'diamond2', tier: '다이아', level: 2, color: '#76baff', hp: 358, atk: 89, speed: 1.16 },
-      { key: 'diamond3', tier: '다이아', level: 3, color: '#76baff', hp: 382, atk: 99, speed: 1.165 },
-      { key: 'redDiamond1', tier: '레드 다이아', level: 1, color: '#ff5b6e', hp: 408, atk: 110, speed: 1.17 },
-      { key: 'redDiamond2', tier: '레드 다이아', level: 2, color: '#ff5b6e', hp: 435, atk: 121, speed: 1.175 },
-      { key: 'redDiamond3', tier: '레드 다이아', level: 3, color: '#ff5b6e', hp: 462, atk: 133, speed: 1.18 },
+      { key: 'bronze1', tier: '브론즈', level: 1, color: '#b87333', hp: 120, atk: 14, speed: 1.04 },
+      { key: 'bronze2', tier: '브론즈', level: 2, color: '#cd7f32', hp: 270, atk: 30, speed: 1.06 },
+      { key: 'bronze3', tier: '브론즈', level: 3, color: '#d28b45', hp: 430, atk: 48, speed: 1.08 },
+      { key: 'silver1', tier: '실버', level: 1, color: '#c0c0c0', hp: 620, atk: 69, speed: 1.10 },
+      { key: 'silver2', tier: '실버', level: 2, color: '#d7dde5', hp: 850, atk: 94, speed: 1.12 },
+      { key: 'silver3', tier: '실버', level: 3, color: '#edf2f7', hp: 1120, atk: 123, speed: 1.14 },
+      { key: 'gold1', tier: '골드', level: 1, color: '#d4af37', hp: 1440, atk: 157, speed: 1.16 },
+      { key: 'gold2', tier: '골드', level: 2, color: '#e0bb46', hp: 1810, atk: 196, speed: 1.18 },
+      { key: 'gold3', tier: '골드', level: 3, color: '#f3cc56', hp: 2230, atk: 241, speed: 1.20 },
+      { key: 'platinum1', tier: '플래티넘', level: 1, color: '#82e0dd', hp: 2710, atk: 292, speed: 1.22 },
+      { key: 'platinum2', tier: '플래티넘', level: 2, color: '#8eede8', hp: 3250, atk: 349, speed: 1.24 },
+      { key: 'platinum3', tier: '플래티넘', level: 3, color: '#9ff7f1', hp: 3860, atk: 414, speed: 1.26 },
+      { key: 'diamond1', tier: '다이아', level: 1, color: '#76baff', hp: 4540, atk: 486, speed: 1.28 },
+      { key: 'diamond2', tier: '다이아', level: 2, color: '#89c6ff', hp: 5300, atk: 567, speed: 1.30 },
+      { key: 'diamond3', tier: '다이아', level: 3, color: '#9fd4ff', hp: 6150, atk: 658, speed: 1.32 },
+      { key: 'redDiamond1', tier: '레드 다이아', level: 1, color: '#ff5b6e', hp: 7100, atk: 760, speed: 1.34 },
+      { key: 'redDiamond2', tier: '레드 다이아', level: 2, color: '#ff6f82', hp: 8160, atk: 874, speed: 1.36 },
+      { key: 'redDiamond3', tier: '레드 다이아', level: 3, color: '#ff8596', hp: 9340, atk: 1000, speed: 1.38 },
     ];
 
     const SAFE_UPGRADES = [
@@ -657,12 +640,12 @@
       loadCountryInput: document.getElementById('loadCountryInput'),
       recentCountries: document.getElementById('recentCountries'),
       countryNameLobby: document.getElementById('countryNameLobby'),
+      selectedMapText: document.getElementById('selectedMapText'),
       loadingFill: document.getElementById('loadingFill'),
       loadingText: document.getElementById('loadingText'),
       playerBadge: document.getElementById('playerBadge'),
       enemyBadge: document.getElementById('enemyBadge'),
       notice: document.getElementById('notice'),
-      field: document.getElementById('field'),
       unitsLayer: document.getElementById('unitsLayer'),
       playerSafeFill: document.getElementById('playerSafeFill'),
       enemySafeFill: document.getElementById('enemySafeFill'),
@@ -670,6 +653,7 @@
       enemySafeText: document.getElementById('enemySafeText'),
       playerCount: document.getElementById('playerCount'),
       enemyCount: document.getElementById('enemyCount'),
+      prepTimerBadge: document.getElementById('prepTimerBadge'),
       safeCurrent: document.getElementById('safeCurrent'),
       safeNext: document.getElementById('safeNext'),
       safeCost: document.getElementById('safeCost'),
@@ -682,16 +666,19 @@
       resultOverlay: document.getElementById('resultOverlay'),
       resultTitle: document.getElementById('resultTitle'),
       resultText: document.getElementById('resultText'),
+      mapOverlay: document.getElementById('mapOverlay'),
     };
 
     const state = {
       screen: 'setup',
       countryName: '',
+      selectedMap: '1 vs 1 경기장',
       loadingProgress: 0,
       loadingTimer: null,
       gameLoop: null,
       aiLoop: null,
       incomeLoop: null,
+      prepLoop: null,
       assaultMode: false,
       winner: null,
       coins: 1000,
@@ -704,6 +691,8 @@
       enemySafeHp: MAX_SAFE_HP,
       units: [],
       ai: { timer: 0, nextActionAt: 1200, stance: 'defend' },
+      prepRemaining: PREP_MS,
+      prepActive: true,
     };
 
     function showScreen(name) {
@@ -712,17 +701,12 @@
       state.screen = name;
     }
 
-    function saveCountryList(list) {
-      localStorage.setItem('vault-defense-country-list', JSON.stringify(list));
-    }
-
+    function saveCountryList(list) { localStorage.setItem('vault-defense-country-list', JSON.stringify(list)); }
     function getCountryList() {
       try {
         const arr = JSON.parse(localStorage.getItem('vault-defense-country-list') || '[]');
         return Array.isArray(arr) ? arr : [];
-      } catch {
-        return [];
-      }
+      } catch { return []; }
     }
 
     function renderRecentCountries() {
@@ -765,31 +749,16 @@
       return cost;
     }
 
-    function currentIncome(level) {
-      return level === 0 ? 100 : SAFE_UPGRADES[level - 1].income;
-    }
-
-    function nextSafeCost(level) {
-      return level < SAFE_UPGRADES.length ? SAFE_UPGRADES[level].cost : null;
-    }
-
-    function nextRankCost(rankIndex) {
-      return 1000 * Math.pow(2, rankIndex);
-    }
-
-    function clamp(v, min, max) {
-      return Math.max(min, Math.min(max, v));
-    }
-
+    function currentIncome(level) { return level === 0 ? 100 : SAFE_UPGRADES[level - 1].income; }
+    function nextSafeCost(level) { return level < SAFE_UPGRADES.length ? SAFE_UPGRADES[level].cost : null; }
+    function nextRankCost(rankIndex) { return 1000 * Math.pow(2, rankIndex); }
+    function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
     function distance(a, b) {
       const dx = a.x - b.x;
       const dy = a.y - b.y;
       return Math.hypot(dx, dy);
     }
-
-    function uid() {
-      return Date.now() + '-' + Math.random().toString(36).slice(2, 9);
-    }
+    function uid() { return Date.now() + '-' + Math.random().toString(36).slice(2, 9); }
 
     function createUnit(team, rankIndex, x, y) {
       const r = RANKS[rankIndex];
@@ -804,12 +773,24 @@
         atk: r.atk,
         speed: r.speed,
         attackCooldown: 0,
-        engaged: team === 'enemy' ? false : state.assaultMode,
+        engaged: false,
       };
     }
 
     function setNotice(text) {
-      els.notice.textContent = text;
+      if (state.prepActive) {
+        els.notice.innerHTML = `${text}<span class="prep-badge">준비시간 ${Math.ceil(state.prepRemaining / 1000)}초</span>`;
+      } else {
+        els.notice.textContent = text;
+      }
+    }
+
+    function clearIntervals() {
+      clearInterval(state.loadingTimer);
+      clearInterval(state.incomeLoop);
+      clearInterval(state.aiLoop);
+      clearInterval(state.gameLoop);
+      clearInterval(state.prepLoop);
     }
 
     function resetGame() {
@@ -826,8 +807,10 @@
       state.enemySafeHp = MAX_SAFE_HP;
       state.units = [];
       state.ai = { timer: 0, nextActionAt: 1200, stance: 'defend' };
+      state.prepRemaining = PREP_MS;
+      state.prepActive = true;
       els.resultOverlay.classList.remove('show');
-      setNotice('아군 진영 아무 곳이나 눌러 군사를 소환하세요.');
+      setNotice('준비시간입니다. 금고 강화와 군사 준비를 진행하세요.');
       renderBattle();
     }
 
@@ -857,18 +840,23 @@
       }, 80);
     }
 
-    function clearIntervals() {
-      clearInterval(state.loadingTimer);
-      clearInterval(state.incomeLoop);
-      clearInterval(state.aiLoop);
-      clearInterval(state.gameLoop);
-    }
-
     function startGameLoops() {
       state.incomeLoop = setInterval(() => {
         if (state.winner) return;
         state.coins += currentIncome(state.safeUpgradeLevel) * (TICK / 1000);
         state.enemyCoins += currentIncome(state.enemySafeUpgradeLevel) * (TICK / 1000);
+        renderBattle();
+      }, TICK);
+
+      state.prepLoop = setInterval(() => {
+        if (state.winner || !state.prepActive) return;
+        state.prepRemaining = Math.max(0, state.prepRemaining - TICK);
+        if (state.prepRemaining <= 0) {
+          state.prepActive = false;
+          setNotice('준비시간 종료! 이제 공격하거나 철수시켜 방어할 수 있습니다.');
+        } else {
+          setNotice('준비시간입니다. 금고 강화와 군사 준비를 진행하세요.');
+        }
         renderBattle();
       }, TICK);
 
@@ -895,37 +883,51 @@
       const enemyUnits = state.units.filter(u => u.team === 'enemy');
       const playerUnits = state.units.filter(u => u.team === 'player');
       const enemyIncome = currentIncome(state.enemySafeUpgradeLevel);
-      const pressureOnEnemy = enemyUnits.some(u => u.x > FIELD_W * 0.62);
-      const pressureOnPlayer = playerUnits.some(u => u.x < FIELD_W * 0.38);
+      const pressureOnEnemy = enemyUnits.some(u => u.x > FIELD_W * 0.64);
+      const pressureOnPlayer = playerUnits.some(u => u.x < FIELD_W * 0.36);
+      const enemySafeCost = nextSafeCost(state.enemySafeUpgradeLevel);
+      const enemyRankCost = nextRankCost(state.enemyRankIndex);
+      const eSummonCost = summonCost(state.enemyRankIndex);
+
+      if (state.prepActive) {
+        if (enemySafeCost && state.enemyCoins >= enemySafeCost && (enemyIncome < 500 || Math.random() < 0.55)) {
+          state.enemyCoins -= enemySafeCost;
+          state.enemySafeUpgradeLevel += 1;
+        } else if (state.enemyRankIndex < RANKS.length - 1 && state.enemyCoins >= enemyRankCost) {
+          state.enemyCoins -= enemyRankCost;
+          state.enemyRankIndex += 1;
+        } else if (state.enemyCoins >= eSummonCost) {
+          state.enemyCoins -= eSummonCost;
+          state.units.push(createUnit('enemy', state.enemyRankIndex, ENEMY_SAFE_X - 70 - Math.random() * 22, SAFE_Y + (Math.random() * 70 - 35)));
+        }
+        return;
+      }
 
       if (pressureOnPlayer || state.enemySafeHp < state.playerSafeHp) state.ai.stance = 'aggressive';
       else if (pressureOnEnemy || enemyUnits.length < playerUnits.length) state.ai.stance = 'defend';
       else state.ai.stance = Math.random() < 0.5 ? 'defend' : 'aggressive';
 
-      const enemySafeCost = nextSafeCost(state.enemySafeUpgradeLevel);
-      const enemyRankCost = nextRankCost(state.enemyRankIndex);
-      const eSummonCost = summonCost(state.enemyRankIndex);
-
-      if (enemySafeCost && state.enemyCoins >= enemySafeCost && (enemyIncome < 500 || Math.random() < 0.45)) {
+      if (enemySafeCost && state.enemyCoins >= enemySafeCost && (enemyIncome < 1000 || Math.random() < 0.36)) {
         state.enemyCoins -= enemySafeCost;
         state.enemySafeUpgradeLevel += 1;
-      } else if (state.enemyRankIndex < RANKS.length - 1 && state.enemyCoins >= enemyRankCost && (enemyUnits.length >= 2 || enemyIncome >= 250 || Math.random() < 0.4)) {
+      } else if (state.enemyRankIndex < RANKS.length - 1 && state.enemyCoins >= enemyRankCost && (enemyUnits.length >= 2 || Math.random() < 0.55)) {
         state.enemyCoins -= enemyRankCost;
         state.enemyRankIndex += 1;
       } else {
-        const tries = state.ai.stance === 'aggressive' ? 2 : 1;
-        for (let i = 0; i < tries; i++) {
+        const targetArmy = Math.max(2, Math.ceil(playerUnits.length * 0.9));
+        const summonTimes = enemyUnits.length < targetArmy ? 2 : 1;
+        for (let i = 0; i < summonTimes; i++) {
           if (state.enemyCoins >= eSummonCost) {
             state.enemyCoins -= eSummonCost;
-            state.units.push(createUnit('enemy', state.enemyRankIndex, ENEMY_SAFE_X - 70 - Math.random() * 130, 150 + Math.random() * (FIELD_H - 300)));
+            state.units.push(createUnit('enemy', state.enemyRankIndex, ENEMY_SAFE_X - 70 - Math.random() * 22, SAFE_Y + (Math.random() * 70 - 35)));
           }
         }
       }
 
-      if (state.ai.stance === 'aggressive' || (enemyUnits.length >= 4 && playerUnits.length <= enemyUnits.length + 1)) {
-        state.units.forEach(u => {
-          if (u.team === 'enemy') u.engaged = true;
-        });
+      if (state.ai.stance === 'aggressive' || enemyUnits.length >= playerUnits.length + 1) {
+        state.units.forEach(u => { if (u.team === 'enemy') u.engaged = true; });
+      } else {
+        state.units.forEach(u => { if (u.team === 'enemy') u.engaged = false; });
       }
     }
 
@@ -940,6 +942,7 @@
 
       for (const u of next) {
         if (u.hp <= 0) continue;
+
         const enemies = next.filter(v => v.team !== u.team && v.hp > 0);
         let nearestEnemy = null;
         let nearestDist = Infinity;
@@ -956,7 +959,7 @@
           : next.some(v => v.team === 'player' && v.hp > 0 && v.x > FIELD_W / 2);
 
         const autoDefend = enemyInOwnTerritory;
-        const shouldAdvance = u.team === 'player' ? (state.assaultMode || autoDefend) : (u.engaged || autoDefend);
+        const shouldAdvance = state.prepActive ? false : (u.team === 'player' ? (state.assaultMode || autoDefend) : (u.engaged || autoDefend));
         const targetSafeX = u.team === 'player' ? ENEMY_SAFE_X : FRIENDLY_SAFE_X;
         const targetSafeY = SAFE_Y;
         const safeDistance = Math.hypot(u.x - targetSafeX, u.y - targetSafeY);
@@ -966,35 +969,35 @@
         if (nearestEnemy && inUnitRange) {
           if (u.attackCooldown <= 0) {
             nearestEnemy.hp -= u.atk;
-            u.attackCooldown = 650;
+            u.attackCooldown = 780;
           }
         } else if (shouldAdvance && inSafeRange) {
           if (u.attackCooldown <= 0) {
             if (u.team === 'player') enemySafeHp -= u.atk;
             else playerSafeHp -= u.atk;
-            u.attackCooldown = 700;
+            u.attackCooldown = 820;
           }
-        } else if (nearestEnemy && (autoDefend || shouldAdvance) && nearestDist < 170) {
+        } else if (nearestEnemy && (autoDefend || shouldAdvance) && nearestDist < 210) {
           const dx = nearestEnemy.x - u.x;
           const dy = nearestEnemy.y - u.y;
           const d = Math.max(1, Math.hypot(dx, dy));
-          u.x += (dx / d) * u.speed * 4.3;
-          u.y += (dy / d) * u.speed * 4.3;
+          u.x += (dx / d) * u.speed * 3.7;
+          u.y += (dy / d) * u.speed * 3.7;
         } else if (shouldAdvance) {
           const dx = targetSafeX - u.x;
           const dy = targetSafeY - u.y;
           const d = Math.max(1, Math.hypot(dx, dy));
-          u.x += (dx / d) * u.speed * 4.1;
-          u.y += (dy / d) * u.speed * 4.1;
+          u.x += (dx / d) * u.speed * 3.8;
+          u.y += (dy / d) * u.speed * 3.8;
         } else {
-          const homeX = u.team === 'player' ? FRIENDLY_SAFE_X + 80 : ENEMY_SAFE_X - 80;
+          const homeX = u.team === 'player' ? FRIENDLY_SAFE_X + 88 : ENEMY_SAFE_X - 88;
           const homeY = SAFE_Y;
           const dx = homeX - u.x;
           const dy = homeY - u.y;
           const d = Math.max(1, Math.hypot(dx, dy));
-          if (d > 30) {
-            u.x += (dx / d) * u.speed * 2.6;
-            u.y += (dy / d) * u.speed * 2.6;
+          if (d > 24) {
+            u.x += (dx / d) * u.speed * 2.8;
+            u.y += (dy / d) * u.speed * 2.8;
           }
         }
 
@@ -1046,6 +1049,7 @@
       els.summonCostBadge.style.borderColor = rank.color;
       els.summonCostBadge.style.background = rank.color + '22';
 
+      els.prepTimerBadge.textContent = state.prepActive ? `준비시간: ${Math.ceil(state.prepRemaining / 1000)}초` : '준비시간 종료';
       renderSafeBars();
       renderCounts();
       renderBattleUnits();
@@ -1073,9 +1077,10 @@
         div.className = 'unit';
         div.style.left = (u.x / FIELD_W) * 100 + '%';
         div.style.top = (u.y / FIELD_H) * 100 + '%';
+        const borderColor = u.team === 'player' ? '#60a5fa' : '#f87171';
         div.innerHTML = `
           <div class="unit-level">${rank.level}</div>
-          <div class="unit-body" style="background:${rank.color}; box-shadow:0 0 14px ${rank.color};"></div>
+          <div class="unit-body" style="background:${rank.color}; border-color:${borderColor}; box-shadow:0 0 14px ${rank.color};"></div>
           <div class="unit-hp"><div class="unit-hp-fill" style="width:${(u.hp / u.maxHp) * 100}%;"></div></div>
         `;
         els.unitsLayer.appendChild(div);
@@ -1122,22 +1127,15 @@
       renderBattle();
     }
 
-    function summonAtClient(clientX, clientY) {
+    function playerSummon() {
       if (state.winner) return;
       const cost = summonCost(state.playerRankIndex);
       if (state.coins < cost) {
         setNotice('군사 소환 코인이 부족합니다.');
         return;
       }
-      const rect = els.field.getBoundingClientRect();
-      const x = ((clientX - rect.left) / rect.width) * FIELD_W;
-      const y = ((clientY - rect.top) / rect.height) * FIELD_H;
-      if (x > FIELD_W / 2 - 22) {
-        setNotice('아군 진영(왼쪽 절반)에만 소환할 수 있습니다.');
-        return;
-      }
       state.coins -= cost;
-      state.units.push(createUnit('player', state.playerRankIndex, clamp(x, 40, FIELD_W / 2 - 30), clamp(y, 60, FIELD_H - 60)));
+      state.units.push(createUnit('player', state.playerRankIndex, FRIENDLY_SAFE_X + 70 + Math.random() * 20, SAFE_Y + (Math.random() * 70 - 35)));
       setNotice(`${formatRank(state.playerRankIndex)} 군사를 소환했습니다.`);
       renderBattle();
     }
@@ -1145,6 +1143,7 @@
     function openLobby(name) {
       state.countryName = name;
       els.countryNameLobby.textContent = name;
+      els.selectedMapText.textContent = `선택 맵: ${state.selectedMap}`;
       showScreen('lobby');
     }
 
@@ -1179,53 +1178,45 @@
       renderRecentCountries();
     };
 
-    document.getElementById('playBtn').onclick = () => {
-      startLoading();
+    document.getElementById('openMapBtn').onclick = () => {
+      els.mapOverlay.classList.add('show');
     };
 
-    document.getElementById('exitBattleBtn').onclick = () => {
-      clearIntervals();
-      showScreen('lobby');
+    document.getElementById('closeMapBtn').onclick = () => {
+      els.mapOverlay.classList.remove('show');
     };
 
-    document.getElementById('resultBackBtn').onclick = () => {
-      clearIntervals();
-      els.resultOverlay.classList.remove('show');
-      showScreen('lobby');
+    document.getElementById('selectMapBtn').onclick = () => {
+      state.selectedMap = '1 vs 1 경기장';
+      els.selectedMapText.textContent = `선택 맵: ${state.selectedMap}`;
+      els.mapOverlay.classList.remove('show');
     };
+
+    document.getElementById('playBtn').onclick = () => { startLoading(); };
+    document.getElementById('exitBattleBtn').onclick = () => { clearIntervals(); showScreen('lobby'); };
+    document.getElementById('resultBackBtn').onclick = () => { clearIntervals(); els.resultOverlay.classList.remove('show'); showScreen('lobby'); };
 
     document.getElementById('safeUpgradeBtn').onclick = playerBuySafeUpgrade;
     document.getElementById('rankUpgradeBtn').onclick = playerBuyRankUpgrade;
+    document.getElementById('summonBtn').onclick = playerSummon;
 
     document.getElementById('attackBtn').onclick = () => {
       if (state.winner) return;
+      if (state.prepActive) {
+        setNotice('아직 준비시간입니다. 준비시간이 끝나면 공격할 수 있습니다.');
+        return;
+      }
       state.assaultMode = true;
       state.units.forEach(u => { if (u.team === 'player') u.engaged = true; });
       setNotice('공격 개시! 아군 군사가 적 진영으로 진격합니다.');
     };
 
-    document.getElementById('defendBtn').onclick = () => {
+    document.getElementById('retreatBtn').onclick = () => {
       if (state.winner) return;
       state.assaultMode = false;
       state.units.forEach(u => { if (u.team === 'player') u.engaged = false; });
-      setNotice('방어 태세 전환. 적이 아군 진영으로 들어오면 자동 대응합니다.');
+      setNotice('철수! 아군 군사가 금고 쪽으로 복귀합니다.');
     };
-
-    let touchHandled = false;
-    els.field.addEventListener('touchstart', (e) => {
-      touchHandled = true;
-      const t = e.touches[0];
-      if (t) summonAtClient(t.clientX, t.clientY);
-      e.preventDefault();
-    }, { passive: false });
-
-    els.field.addEventListener('click', (e) => {
-      if (touchHandled) {
-        touchHandled = false;
-        return;
-      }
-      summonAtClient(e.clientX, e.clientY);
-    });
 
     renderRecentCountries();
   </script>
