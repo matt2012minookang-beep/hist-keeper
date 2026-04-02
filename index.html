@@ -601,38 +601,37 @@
     const ENEMY_SAFE_X = 1080;
     const SAFE_Y = FIELD_H / 2;
     const SAFE_RADIUS = 54;
-    const MAX_SAFE_HP = 5200;
+    const BASE_SAFE_HP = 52000;
     const PREP_MS = 60000;
     const TICK = 100;
 
     const RANKS = [
-      { key: 'bronze1', tier: '브론즈', level: 1, color: '#b87333', hp: 120, atk: 14, speed: 1.04 },
-      { key: 'bronze2', tier: '브론즈', level: 2, color: '#cd7f32', hp: 270, atk: 30, speed: 1.06 },
-      { key: 'bronze3', tier: '브론즈', level: 3, color: '#d28b45', hp: 430, atk: 48, speed: 1.08 },
-      { key: 'silver1', tier: '실버', level: 1, color: '#c0c0c0', hp: 620, atk: 69, speed: 1.10 },
-      { key: 'silver2', tier: '실버', level: 2, color: '#d7dde5', hp: 850, atk: 94, speed: 1.12 },
-      { key: 'silver3', tier: '실버', level: 3, color: '#edf2f7', hp: 1120, atk: 123, speed: 1.14 },
-      { key: 'gold1', tier: '골드', level: 1, color: '#d4af37', hp: 1440, atk: 157, speed: 1.16 },
-      { key: 'gold2', tier: '골드', level: 2, color: '#e0bb46', hp: 1810, atk: 196, speed: 1.18 },
-      { key: 'gold3', tier: '골드', level: 3, color: '#f3cc56', hp: 2230, atk: 241, speed: 1.20 },
-      { key: 'platinum1', tier: '플래티넘', level: 1, color: '#82e0dd', hp: 2710, atk: 292, speed: 1.22 },
-      { key: 'platinum2', tier: '플래티넘', level: 2, color: '#8eede8', hp: 3250, atk: 349, speed: 1.24 },
-      { key: 'platinum3', tier: '플래티넘', level: 3, color: '#9ff7f1', hp: 3860, atk: 414, speed: 1.26 },
-      { key: 'diamond1', tier: '다이아', level: 1, color: '#76baff', hp: 4540, atk: 486, speed: 1.28 },
-      { key: 'diamond2', tier: '다이아', level: 2, color: '#89c6ff', hp: 5300, atk: 567, speed: 1.30 },
-      { key: 'diamond3', tier: '다이아', level: 3, color: '#9fd4ff', hp: 6150, atk: 658, speed: 1.32 },
-      { key: 'redDiamond1', tier: '레드 다이아', level: 1, color: '#ff5b6e', hp: 7100, atk: 760, speed: 1.34 },
-      { key: 'redDiamond2', tier: '레드 다이아', level: 2, color: '#ff6f82', hp: 8160, atk: 874, speed: 1.36 },
-      { key: 'redDiamond3', tier: '레드 다이아', level: 3, color: '#ff8596', hp: 9340, atk: 1000, speed: 1.38 },
+      { key: 'bronze1', tier: '브론즈', level: 1, color: '#b87333', hp: 300, atk: 50, speed: 1.04 },
+      { key: 'bronze2', tier: '브론즈', level: 2, color: '#cd7f32', hp: 960, atk: 160, speed: 1.06 },
+      { key: 'bronze3', tier: '브론즈', level: 3, color: '#d28b45', hp: 3000, atk: 500, speed: 1.08 },
+      { key: 'silver1', tier: '실버', level: 1, color: '#c0c0c0', hp: 9300, atk: 1550, speed: 1.10 },
+      { key: 'silver2', tier: '실버', level: 2, color: '#d7dde5', hp: 28800, atk: 4800, speed: 1.12 },
+      { key: 'silver3', tier: '실버', level: 3, color: '#edf2f7', hp: 89100, atk: 14850, speed: 1.14 },
+      { key: 'gold1', tier: '골드', level: 1, color: '#d4af37', hp: 275700, atk: 45950, speed: 1.16 },
+      { key: 'gold2', tier: '골드', level: 2, color: '#e0bb46', hp: 853800, atk: 142300, speed: 1.18 },
+      { key: 'gold3', tier: '골드', level: 3, color: '#f3cc56', hp: 2643300, atk: 440550, speed: 1.20 },
+      { key: 'platinum1', tier: '플래티넘', level: 1, color: '#82e0dd', hp: 8184900, atk: 1364150, speed: 1.22 },
+      { key: 'platinum2', tier: '플래티넘', level: 2, color: '#8eede8', hp: 25373100, atk: 4228850, speed: 1.24 },
+      { key: 'platinum3', tier: '플래티넘', level: 3, color: '#9ff7f1', hp: 78656600, atk: 13109400, speed: 1.26 },
+      { key: 'diamond1', tier: '다이아', level: 1, color: '#76baff', hp: 243835000, atk: 40639150, speed: 1.28 },
+      { key: 'diamond2', tier: '다이아', level: 2, color: '#89c6ff', hp: 755888000, atk: 125981350, speed: 1.30 },
+      { key: 'diamond3', tier: '다이아', level: 3, color: '#9fd4ff', hp: 2343252000, atk: 390542000, speed: 1.32 },
+      { key: 'redDiamond1', tier: '레드 다이아', level: 1, color: '#ff5b6e', hp: 7264081000, atk: 1210680000, speed: 1.34 },
+      { key: 'redDiamond2', tier: '레드 다이아', level: 2, color: '#ff6f82', hp: 22518651000, atk: 3753108500, speed: 1.36 },
+      { key: 'redDiamond3', tier: '레드 다이아', level: 3, color: '#ff8596', hp: 69807743000, atk: 11634624000, speed: 1.38 },
     ];
 
     const SAFE_UPGRADES = [
-      { cost: 500, income: 150 },
-      { cost: 1500, income: 250 },
-      { cost: 5000, income: 500 },
-      { cost: 10000, income: 1000 },
-      { cost: 15000, income: 1500 },
-      { cost: 20000, income: 2000 },
+      { cost: 500, income: 150, hpBonus: 2000 },
+      { cost: 1500, income: 250, hpBonus: 3000 },
+      { cost: 5000, income: 500, hpBonus: 5000 },
+      { cost: 10000, income: 1000, hpBonus: 8000 },
+      { cost: 15000, income: 1500, hpBonus: 12000 },
     ];
 
     const els = {
@@ -688,7 +687,11 @@
       playerRankIndex: 0,
       enemyRankIndex: 0,
       playerSafeHp: MAX_SAFE_HP,
-      enemySafeHp: MAX_SAFE_HP,
+      enemySafeHp: BASE_SAFE_HP,
+      playerSafeMaxHp: BASE_SAFE_HP,
+      enemySafeMaxHp: BASE_SAFE_HP,
+      playerSafeExploding: false,
+      enemySafeExploding: false,
       units: [],
       ai: { timer: 0, nextActionAt: 1200, stance: 'defend' },
       prepRemaining: PREP_MS,
@@ -749,8 +752,31 @@
       return cost;
     }
 
-    function currentIncome(level) { return level === 0 ? 100 : SAFE_UPGRADES[level - 1].income; }
-    function nextSafeCost(level) { return level < SAFE_UPGRADES.length ? SAFE_UPGRADES[level].cost : null; }
+    function currentIncome(level) {
+      if (level === 0) return 100;
+      if (level <= SAFE_UPGRADES.length) return SAFE_UPGRADES[level - 1].income;
+      const extra = level - SAFE_UPGRADES.length;
+      return 1500 * Math.pow(2, extra);
+    }
+    function nextSafeCost(level) {
+      if (level < SAFE_UPGRADES.length) return SAFE_UPGRADES[level].cost;
+      const extra = level - SAFE_UPGRADES.length;
+      return 20000 * Math.pow(2, extra);
+    }
+    function currentSafeHpBonus(level) {
+      let bonus = 0;
+      for (let i = 1; i <= level; i++) {
+        if (i <= SAFE_UPGRADES.length) bonus += SAFE_UPGRADES[i - 1].hpBonus;
+        else {
+          const extra = i - SAFE_UPGRADES.length;
+          bonus += 12000 * Math.pow(1.6, extra);
+        }
+      }
+      return Math.floor(bonus);
+    }
+    function currentSafeMaxHp(level) {
+      return BASE_SAFE_HP + currentSafeHpBonus(level);
+    }
     function nextRankCost(rankIndex) { return 1000 * Math.pow(2, rankIndex); }
     function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
     function distance(a, b) {
@@ -803,8 +829,12 @@
       state.enemySafeUpgradeLevel = 0;
       state.playerRankIndex = 0;
       state.enemyRankIndex = 0;
-      state.playerSafeHp = MAX_SAFE_HP;
-      state.enemySafeHp = MAX_SAFE_HP;
+      state.playerSafeHp = BASE_SAFE_HP;
+      state.enemySafeHp = BASE_SAFE_HP;
+      state.playerSafeMaxHp = BASE_SAFE_HP;
+      state.enemySafeMaxHp = BASE_SAFE_HP;
+      state.playerSafeExploding = false;
+      state.enemySafeExploding = false;
       state.units = [];
       state.ai = { timer: 0, nextActionAt: 1200, stance: 'defend' };
       state.prepRemaining = PREP_MS;
@@ -888,15 +918,24 @@
       const enemySafeCost = nextSafeCost(state.enemySafeUpgradeLevel);
       const enemyRankCost = nextRankCost(state.enemyRankIndex);
       const eSummonCost = summonCost(state.enemyRankIndex);
+      const enemyCount = enemyUnits.length;
 
       if (state.prepActive) {
-        if (enemySafeCost && state.enemyCoins >= enemySafeCost && (enemyIncome < 500 || Math.random() < 0.55)) {
+        if (enemySafeCost && state.enemyCoins >= enemySafeCost && (enemyIncome < currentIncome(state.safeUpgradeLevel) || Math.random() < 0.62)) {
           state.enemyCoins -= enemySafeCost;
           state.enemySafeUpgradeLevel += 1;
-        } else if (state.enemyRankIndex < RANKS.length - 1 && state.enemyCoins >= enemyRankCost) {
+          const newMax = currentSafeMaxHp(state.enemySafeUpgradeLevel);
+          const delta = newMax - state.enemySafeMaxHp;
+          state.enemySafeMaxHp = newMax;
+          state.enemySafeHp += delta;
+          return;
+        }
+        if (state.enemyRankIndex < RANKS.length - 1 && state.enemyCoins >= enemyRankCost && (state.enemyRankIndex <= state.playerRankIndex || Math.random() < 0.7)) {
           state.enemyCoins -= enemyRankCost;
           state.enemyRankIndex += 1;
-        } else if (state.enemyCoins >= eSummonCost) {
+          return;
+        }
+        if (enemyCount < 10 && state.enemyCoins >= eSummonCost) {
           state.enemyCoins -= eSummonCost;
           state.units.push(createUnit('enemy', state.enemyRankIndex, ENEMY_SAFE_X - 70 - Math.random() * 22, SAFE_Y + (Math.random() * 70 - 35)));
         }
@@ -907,16 +946,24 @@
       else if (pressureOnEnemy || enemyUnits.length < playerUnits.length) state.ai.stance = 'defend';
       else state.ai.stance = Math.random() < 0.5 ? 'defend' : 'aggressive';
 
-      if (enemySafeCost && state.enemyCoins >= enemySafeCost && (enemyIncome < 1000 || Math.random() < 0.36)) {
+      const shouldEco = state.enemySafeUpgradeLevel < state.safeUpgradeLevel || enemyIncome < currentIncome(state.safeUpgradeLevel) || Math.random() < 0.28;
+      const shouldRank = state.enemyRankIndex < state.playerRankIndex || (enemyUnits.length >= 2 && Math.random() < 0.52);
+
+      if (enemySafeCost && state.enemyCoins >= enemySafeCost && shouldEco) {
         state.enemyCoins -= enemySafeCost;
         state.enemySafeUpgradeLevel += 1;
-      } else if (state.enemyRankIndex < RANKS.length - 1 && state.enemyCoins >= enemyRankCost && (enemyUnits.length >= 2 || Math.random() < 0.55)) {
+        const newMax = currentSafeMaxHp(state.enemySafeUpgradeLevel);
+        const delta = newMax - state.enemySafeMaxHp;
+        state.enemySafeMaxHp = newMax;
+        state.enemySafeHp += delta;
+      } else if (state.enemyRankIndex < RANKS.length - 1 && state.enemyCoins >= enemyRankCost && shouldRank) {
         state.enemyCoins -= enemyRankCost;
         state.enemyRankIndex += 1;
       } else {
-        const targetArmy = Math.max(2, Math.ceil(playerUnits.length * 0.9));
-        const summonTimes = enemyUnits.length < targetArmy ? 2 : 1;
+        const targetArmy = Math.min(10, Math.max(3, Math.ceil(playerUnits.length * 1.05)));
+        const summonTimes = enemyCount < targetArmy ? 2 : 1;
         for (let i = 0; i < summonTimes; i++) {
+          if (state.units.filter(u => u.team === 'enemy').length >= 10) break;
           if (state.enemyCoins >= eSummonCost) {
             state.enemyCoins -= eSummonCost;
             state.units.push(createUnit('enemy', state.enemyRankIndex, ENEMY_SAFE_X - 70 - Math.random() * 22, SAFE_Y + (Math.random() * 70 - 35)));
@@ -924,11 +971,9 @@
         }
       }
 
-      if (state.ai.stance === 'aggressive' || enemyUnits.length >= playerUnits.length + 1) {
-        state.units.forEach(u => { if (u.team === 'enemy') u.engaged = true; });
-      } else {
-        state.units.forEach(u => { if (u.team === 'enemy') u.engaged = false; });
-      }
+      state.units.forEach(u => {
+        if (u.team === 'enemy') u.engaged = state.ai.stance === 'aggressive' || enemyUnits.length >= playerUnits.length;
+      });
     }
 
     function updateUnits() {
@@ -1010,14 +1055,14 @@
       state.enemySafeHp = Math.max(0, enemySafeHp);
 
       if (state.enemySafeHp <= 0 && !state.winner) {
-        state.winner = 'player';
-        showResult('승리!', '적 금고를 먼저 파괴했습니다.');
-        setNotice('승리! 적 금고를 파괴했습니다.');
+        state.enemySafeHp = 0;
+        state.enemySafeExploding = true;
+        triggerSafeExplosion('enemy');
       }
       if (state.playerSafeHp <= 0 && !state.winner) {
-        state.winner = 'enemy';
-        showResult('패배', '아군 금고가 파괴되었습니다.');
-        setNotice('패배... 아군 금고가 파괴되었습니다.');
+        state.playerSafeHp = 0;
+        state.playerSafeExploding = true;
+        triggerSafeExplosion('player');
       }
     }
 
@@ -1028,9 +1073,9 @@
       els.enemyBadge.textContent = `적군 · ${Math.floor(state.enemyCoins)} 코인 · ${eIncome}/s`;
 
       const safeCost = nextSafeCost(state.safeUpgradeLevel);
-      els.safeCurrent.textContent = `현재 생산량: ${pIncome}/s`;
-      els.safeNext.textContent = `다음 생산량: ${state.safeUpgradeLevel < SAFE_UPGRADES.length ? SAFE_UPGRADES[state.safeUpgradeLevel].income + '/s' : '최대'}`;
-      els.safeCost.textContent = safeCost ? safeCost : 'MAX';
+      els.safeCurrent.textContent = `현재 생산량: ${pIncome}/s · 현재 체력: ${Math.floor(state.playerSafeMaxHp)}`;
+      els.safeNext.textContent = `다음 생산량: ${currentIncome(state.safeUpgradeLevel + 1)}/s · 다음 체력: ${Math.floor(currentSafeMaxHp(state.safeUpgradeLevel + 1))}`;
+      els.safeCost.textContent = safeCost;
 
       const rank = RANKS[state.playerRankIndex];
       const nextR = RANKS[Math.min(RANKS.length - 1, state.playerRankIndex + 1)];
@@ -1056,10 +1101,10 @@
     }
 
     function renderSafeBars() {
-      els.playerSafeFill.style.width = (state.playerSafeHp / MAX_SAFE_HP) * 100 + '%';
-      els.enemySafeFill.style.width = (state.enemySafeHp / MAX_SAFE_HP) * 100 + '%';
-      els.playerSafeText.textContent = `${Math.ceil(state.playerSafeHp)} / ${MAX_SAFE_HP}`;
-      els.enemySafeText.textContent = `${Math.ceil(state.enemySafeHp)} / ${MAX_SAFE_HP}`;
+      els.playerSafeFill.style.width = (state.playerSafeHp / state.playerSafeMaxHp) * 100 + '%';
+      els.enemySafeFill.style.width = (state.enemySafeHp / state.enemySafeMaxHp) * 100 + '%';
+      els.playerSafeText.textContent = `${Math.ceil(state.playerSafeHp)} / ${Math.floor(state.playerSafeMaxHp)}`;
+      els.enemySafeText.textContent = `${Math.ceil(state.enemySafeHp)} / ${Math.floor(state.enemySafeMaxHp)}`;
     }
 
     function renderCounts() {
@@ -1096,17 +1141,17 @@
     function playerBuySafeUpgrade() {
       if (state.winner) return;
       const cost = nextSafeCost(state.safeUpgradeLevel);
-      if (!cost) {
-        setNotice('금고 강화는 현재 마지막 단계입니다.');
-        return;
-      }
       if (state.coins < cost) {
         setNotice('코인이 부족합니다.');
         return;
       }
       state.coins -= cost;
       state.safeUpgradeLevel += 1;
-      setNotice(`금고 생산량이 ${currentIncome(state.safeUpgradeLevel)}/s 로 강화되었습니다!`);
+      const newMax = currentSafeMaxHp(state.safeUpgradeLevel);
+      const delta = newMax - state.playerSafeMaxHp;
+      state.playerSafeMaxHp = newMax;
+      state.playerSafeHp += delta;
+      setNotice(`금고 생산량이 ${currentIncome(state.safeUpgradeLevel)}/s 로 강화되고 체력도 증가했습니다!`);
       renderBattle();
     }
 
@@ -1129,6 +1174,11 @@
 
     function playerSummon() {
       if (state.winner) return;
+      const playerCount = state.units.filter(u => u.team === 'player').length;
+      if (playerCount >= 10) {
+        setNotice('아군 군사는 최대 10명까지 소환할 수 있습니다.');
+        return;
+      }
       const cost = summonCost(state.playerRankIndex);
       if (state.coins < cost) {
         setNotice('군사 소환 코인이 부족합니다.');
@@ -1199,6 +1249,51 @@
     document.getElementById('safeUpgradeBtn').onclick = playerBuySafeUpgrade;
     document.getElementById('rankUpgradeBtn').onclick = playerBuyRankUpgrade;
     document.getElementById('summonBtn').onclick = playerSummon;
+
+    function triggerSafeExplosion(team) {
+      const safeEl = document.getElementById(team === 'player' ? 'playerSafe' : 'enemySafe');
+      const box = safeEl.querySelector('.safe-box');
+      box.animate([
+        { transform: 'scale(1) rotate(0deg)', filter: 'brightness(1)' },
+        { transform: 'scale(1.18) rotate(-6deg)', filter: 'brightness(1.8)' },
+        { transform: 'scale(0.82) rotate(7deg)', filter: 'brightness(0.9)' },
+        { transform: 'scale(1.45) rotate(-10deg)', filter: 'brightness(2.2)', opacity: 1 },
+        { transform: 'scale(0.2) rotate(20deg)', filter: 'brightness(2.8)', opacity: 0 }
+      ], { duration: 900, easing: 'ease-out' });
+
+      for (let i = 0; i < 10; i++) {
+        const spark = document.createElement('div');
+        spark.style.position = 'absolute';
+        spark.style.left = '50%';
+        spark.style.top = '50%';
+        spark.style.width = '14px';
+        spark.style.height = '14px';
+        spark.style.borderRadius = '999px';
+        spark.style.background = team === 'player' ? '#60a5fa' : '#f87171';
+        spark.style.pointerEvents = 'none';
+        safeEl.appendChild(spark);
+        const angle = (Math.PI * 2 * i) / 10;
+        const dx = Math.cos(angle) * (70 + Math.random() * 40);
+        const dy = Math.sin(angle) * (70 + Math.random() * 40);
+        spark.animate([
+          { transform: 'translate(-50%, -50%) scale(1)', opacity: 1 },
+          { transform: `translate(calc(-50% + ${dx}px), calc(-50% + ${dy}px)) scale(0.2)`, opacity: 0 }
+        ], { duration: 850, easing: 'ease-out' }).onfinish = () => spark.remove();
+      }
+
+      setTimeout(() => {
+        if (state.winner) return;
+        if (team === 'enemy') {
+          state.winner = 'player';
+          showResult('승리!', '적 금고를 먼저 파괴했습니다.');
+          setNotice('승리! 적 금고가 폭발했습니다.');
+        } else {
+          state.winner = 'enemy';
+          showResult('패배', '아군 금고가 파괴되었습니다.');
+          setNotice('패배... 아군 금고가 폭발했습니다.');
+        }
+      }, 920);
+    }
 
     document.getElementById('attackBtn').onclick = () => {
       if (state.winner) return;
