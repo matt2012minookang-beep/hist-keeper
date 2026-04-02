@@ -204,6 +204,7 @@
     }
     .badge.blue { background: rgba(37,99,235,0.2); border-color: rgba(96,165,250,0.8); color: #bfdbfe; }
     .badge.red { background: rgba(239,68,68,0.16); border-color: rgba(252,165,165,0.8); color: #fecaca; }
+    .badge.trophy { background: rgba(245,158,11,0.16); border-color: rgba(245,158,11,0.48); color: #fde68a; }
     .menu-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -292,6 +293,8 @@
       width: 108px; height: 108px; border-radius: 24px; border: 4px solid rgba(255,255,255,0.8);
       display: flex; align-items: center; justify-content: center; font-size: 46px;
       box-shadow: 0 0 36px rgba(255,255,255,0.14); margin: 0 auto;
+      position: relative;
+      overflow: hidden;
     }
     .safe-box.blue { background: #3b82f6; box-shadow: 0 0 36px rgba(59,130,246,0.65); }
     .safe-box.red { background: #ef4444; box-shadow: 0 0 36px rgba(239,68,68,0.65); }
@@ -353,6 +356,55 @@
     .overlay-title { font-size: 44px; font-weight: 900; margin-bottom: 10px; }
     .overlay-text { color: #cbd5e1; margin-bottom: 18px; }
     .map-modal-grid { display: grid; gap: 14px; }
+    .vs-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(2,6,23,0.72);
+      z-index: 90;
+      backdrop-filter: blur(4px);
+    }
+    .vs-overlay.show { display: flex; }
+    .vs-box {
+      width: min(860px, 100%);
+      border-radius: 34px;
+      padding: 28px;
+      background: linear-gradient(135deg, rgba(30,41,59,0.98), rgba(15,23,42,0.98));
+      border: 1px solid rgba(148,163,184,0.2);
+      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+    }
+    .vs-row {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+    .vs-team {
+      border-radius: 24px;
+      padding: 22px;
+      font-weight: 900;
+      font-size: clamp(24px, 4vw, 42px);
+      text-align: center;
+    }
+    .vs-team.blue { background: rgba(37,99,235,0.2); color: #bfdbfe; border: 1px solid rgba(96,165,250,0.45); }
+    .vs-team.red { background: rgba(239,68,68,0.16); color: #fecaca; border: 1px solid rgba(248,113,113,0.45); }
+    .vs-center {
+      font-size: clamp(42px, 8vw, 76px);
+      font-weight: 900;
+      color: white;
+      text-shadow: 0 0 28px rgba(255,255,255,0.22);
+    }
+    .rank-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 900;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
 
     @media (max-width: 980px) {
       .hero-grid, .menu-grid, .battle-layout { grid-template-columns: 1fr; }
@@ -362,6 +414,8 @@
       .safe-label { font-size: 16px; }
       .hpbar { width: 150px; }
       .game-card .name { font-size: 20px; }
+      .vs-row { grid-template-columns: 1fr; }
+      .vs-center { order: 2; }
     }
     @media (max-width: 640px) {
       .screen { padding: 10px; }
@@ -392,14 +446,14 @@
             시작 1분은 준비시간이며, 그 뒤 본격적인 진격이 시작됩니다.
           </div>
           <div class="hero-desc">
-            나라 이름을 만들어 저장하고, 다시 불러와 바로 전장에 복귀할 수 있습니다.
-            금고 강화, 군사 강화, 군사 소환을 조합해서 상대 AI와 맞붙는 1 vs 1 전략 전투입니다.
+            나라 이름을 만들어 저장하고, 다시 불러와 이어서 플레이할 수 있습니다.
+            트로피를 모아 등급을 올리고 보상 코인도 받아보세요.
           </div>
           <div class="hero-pills">
             <div class="pill">1분 준비시간</div>
             <div class="pill">공격 / 철수</div>
-            <div class="pill">등급별 군사 차이 강화</div>
-            <div class="pill">모바일 대응</div>
+            <div class="pill">VS 연출</div>
+            <div class="pill">트로피 등급</div>
           </div>
         </div>
 
@@ -428,6 +482,10 @@
     <div class="container">
       <div class="topbar">
         <button id="backToSetupBtn" class="btn btn-gray">← 뒤로</button>
+        <div class="badge-row">
+          <div id="trophyBadge" class="badge trophy"></div>
+          <div id="rankBadge" class="rank-chip"></div>
+        </div>
         <div style="text-align:right;">
           <div style="color:#94a3b8; font-size:14px;">현재 나라</div>
           <div id="countryNameLobby" style="font-size:34px; font-weight:900;"></div>
@@ -443,7 +501,7 @@
 
         <div class="card panel">
           <div class="section-head">전투 시작</div>
-          <div style="color:#cbd5e1; line-height:1.55;">현재 선택된 맵으로 바로 전투를 시작합니다.</div>
+          <div style="color:#cbd5e1; line-height:1.55;">현재 선택된 맵으로 전투를 시작합니다.</div>
           <div id="selectedMapText" style="margin-top:16px; font-size:20px; font-weight:900; color:#bfdbfe;">선택 맵: 1 vs 1 경기장</div>
           <button id="playBtn" class="btn btn-green full" style="margin-top:18px; font-size:22px;">Play!</button>
         </div>
@@ -482,20 +540,20 @@
             <div class="field-grid"></div>
             <div class="field-mid"></div>
             <div class="zone left"></div>
-            <div class="zone right"></div>
+            <div class="zone.right"></div>
 
             <div id="playerSafe" class="safe" style="left:10%; top:50%;">
               <div class="safe-box blue">🏦</div>
               <div class="safe-label">아군 금고</div>
               <div class="hpbar"><div id="playerSafeFill" class="hpfill blue" style="width:100%;"></div></div>
-              <div id="playerSafeText" class="hptext">5200 / 5200</div>
+              <div id="playerSafeText" class="hptext">52000 / 52000</div>
             </div>
 
             <div id="enemySafe" class="safe" style="left:90%; top:50%;">
               <div class="safe-box red">🏦</div>
               <div class="safe-label">적 금고</div>
               <div class="hpbar"><div id="enemySafeFill" class="hpfill red" style="width:100%;"></div></div>
-              <div id="enemySafeText" class="hptext">5200 / 5200</div>
+              <div id="enemySafeText" class="hptext">52000 / 52000</div>
             </div>
 
             <div id="unitsLayer"></div>
@@ -548,8 +606,8 @@
           </button>
 
           <div class="tip">
-            <div style="font-weight:900; color:white; margin-bottom:6px;">전투 흐름</div>
-            시작 1분 동안은 준비시간이라 공격이 불가능합니다. 이때 경제와 군사를 준비하고, 준비시간 종료 후 공격 또는 철수를 선택하세요.
+            <div style="font-weight:900; color:white; margin-bottom:6px;">트로피 규칙</div>
+            승리 시 +10 트로피, 패배 시 -4 트로피. 트로피는 0 아래로 내려가지 않습니다.
           </div>
         </div>
       </div>
@@ -560,6 +618,7 @@
     <div class="overlay-box">
       <div id="resultTitle" class="overlay-title">승리!</div>
       <div id="resultText" class="overlay-text"></div>
+      <div id="resultRewardText" class="overlay-text"></div>
       <button id="resultBackBtn" class="btn btn-green full" style="font-size:20px;">로비로 돌아가기</button>
     </div>
   </div>
@@ -587,6 +646,17 @@
     </div>
   </div>
 
+  <div id="vsOverlay" class="vs-overlay">
+    <div class="vs-box">
+      <div style="text-align:center; color:#cbd5e1; margin-bottom:16px; font-weight:700;">전장 진입</div>
+      <div class="vs-row">
+        <div id="vsPlayerName" class="vs-team blue"></div>
+        <div class="vs-center">VS</div>
+        <div id="vsEnemyName" class="vs-team red"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const screens = {
       setup: document.getElementById('setupScreen'),
@@ -604,6 +674,7 @@
     const BASE_SAFE_HP = 52000;
     const PREP_MS = 60000;
     const TICK = 100;
+    const MAX_UNITS_PER_TEAM = 10;
 
     const RANKS = [
       { key: 'bronze1', tier: '브론즈', level: 1, color: '#b87333', hp: 300, atk: 50, speed: 1.04 },
@@ -626,7 +697,7 @@
       { key: 'redDiamond3', tier: '레드 다이아', level: 3, color: '#ff8596', hp: 69807743000, atk: 11634624000, speed: 1.38 },
     ];
 
-    const SAFE_UPGRADES = [
+    const EARLY_SAFE_UPGRADES = [
       { cost: 500, income: 150, hpBonus: 2000 },
       { cost: 1500, income: 250, hpBonus: 3000 },
       { cost: 5000, income: 500, hpBonus: 5000 },
@@ -634,11 +705,42 @@
       { cost: 15000, income: 1500, hpBonus: 12000 },
     ];
 
+    const RANK_SYSTEM = [
+      { name: 'F', min: 0, color: '#64748b', reward: 300 },
+      { name: 'E', min: 30, color: '#94a3b8', reward: 500 },
+      { name: 'D', min: 70, color: '#84cc16', reward: 800 },
+      { name: 'C', min: 130, color: '#22c55e', reward: 1200 },
+      { name: 'B', min: 220, color: '#14b8a6', reward: 1800 },
+      { name: 'A', min: 340, color: '#06b6d4', reward: 2600 },
+      { name: 'S', min: 500, color: '#3b82f6', reward: 3800 },
+      { name: 'SS', min: 720, color: '#6366f1', reward: 5500 },
+      { name: 'SSS', min: 1000, color: '#8b5cf6', reward: 8000 },
+      { name: 'L', min: 1360, color: '#a855f7', reward: 12000 },
+      { name: 'M', min: 1820, color: '#d946ef', reward: 18000 },
+      { name: 'EX', min: 2400, color: '#ec4899', reward: 26000 },
+      { name: '7', min: 3120, color: '#f43f5e', reward: 38000 },
+      { name: '6', min: 4000, color: '#ef4444', reward: 52000 },
+      { name: '5', min: 5100, color: '#f97316', reward: 70000 },
+      { name: '4', min: 6500, color: '#f59e0b', reward: 92000 },
+      { name: '3', min: 8300, color: '#eab308', reward: 120000 },
+      { name: '2', min: 10600, color: '#84cc16', reward: 155000 },
+      { name: '1', min: 13500, color: '#22c55e', reward: 200000 },
+      { name: '특', min: 17200, color: '#38bdf8', reward: 260000 },
+    ];
+
+    const ENEMY_NAME_POOL = [
+      '흑운 제국', '붉은 사막 연합', '철늑대 공화국', '백야 왕국', '폭풍 동맹', '회색 산맥국',
+      '청동 기사단', '라그나 연방', '붉은 혜성군', '검은 파도 제국', '크로노 왕국', '서리장막국',
+      '황혼 연합', '블러드문 제국', '강철성 왕국', '새벽수호국', '유성 연방', '적안 군국'
+    ];
+
     const els = {
       newCountryInput: document.getElementById('newCountryInput'),
       loadCountryInput: document.getElementById('loadCountryInput'),
       recentCountries: document.getElementById('recentCountries'),
       countryNameLobby: document.getElementById('countryNameLobby'),
+      trophyBadge: document.getElementById('trophyBadge'),
+      rankBadge: document.getElementById('rankBadge'),
       selectedMapText: document.getElementById('selectedMapText'),
       loadingFill: document.getElementById('loadingFill'),
       loadingText: document.getElementById('loadingText'),
@@ -665,13 +767,18 @@
       resultOverlay: document.getElementById('resultOverlay'),
       resultTitle: document.getElementById('resultTitle'),
       resultText: document.getElementById('resultText'),
+      resultRewardText: document.getElementById('resultRewardText'),
       mapOverlay: document.getElementById('mapOverlay'),
+      vsOverlay: document.getElementById('vsOverlay'),
+      vsPlayerName: document.getElementById('vsPlayerName'),
+      vsEnemyName: document.getElementById('vsEnemyName'),
     };
 
     const state = {
       screen: 'setup',
       countryName: '',
       selectedMap: '1 vs 1 경기장',
+      enemyCountryName: '',
       loadingProgress: 0,
       loadingTimer: null,
       gameLoop: null,
@@ -686,7 +793,7 @@
       enemySafeUpgradeLevel: 0,
       playerRankIndex: 0,
       enemyRankIndex: 0,
-      playerSafeHp: MAX_SAFE_HP,
+      playerSafeHp: BASE_SAFE_HP,
       enemySafeHp: BASE_SAFE_HP,
       playerSafeMaxHp: BASE_SAFE_HP,
       enemySafeMaxHp: BASE_SAFE_HP,
@@ -696,6 +803,11 @@
       ai: { timer: 0, nextActionAt: 1200, stance: 'defend' },
       prepRemaining: PREP_MS,
       prepActive: true,
+      trophies: 0,
+      bestRankName: 'F',
+      claimedRankRewards: [],
+      rankRewardQueue: [],
+      resultApplied: false,
     };
 
     function showScreen(name) {
@@ -704,12 +816,45 @@
       state.screen = name;
     }
 
+    function storageKey(name) { return `vault-defense-profile-${name}`; }
+
     function saveCountryList(list) { localStorage.setItem('vault-defense-country-list', JSON.stringify(list)); }
     function getCountryList() {
       try {
         const arr = JSON.parse(localStorage.getItem('vault-defense-country-list') || '[]');
         return Array.isArray(arr) ? arr : [];
       } catch { return []; }
+    }
+
+    function getProfile(name) {
+      try {
+        const raw = localStorage.getItem(storageKey(name));
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch {
+        return null;
+      }
+    }
+
+    function defaultProfile(name) {
+      return {
+        countryName: name,
+        trophies: 0,
+        bestRankName: 'F',
+        claimedRankRewards: [],
+      };
+    }
+
+    function saveProfile() {
+      if (!state.countryName) return;
+      const profile = {
+        countryName: state.countryName,
+        trophies: state.trophies,
+        bestRankName: state.bestRankName,
+        claimedRankRewards: state.claimedRankRewards,
+      };
+      localStorage.setItem(storageKey(state.countryName), JSON.stringify(profile));
+      localStorage.setItem('vault-defense-last-country', state.countryName);
     }
 
     function renderRecentCountries() {
@@ -733,8 +878,34 @@
       const next = [trimmed, ...list.filter(v => v !== trimmed)].slice(0, 8);
       saveCountryList(next);
       localStorage.setItem('vault-defense-last-country', trimmed);
-      localStorage.setItem(`vault-defense-save-${trimmed}`, JSON.stringify({ countryName: trimmed, updatedAt: Date.now() }));
+      const existing = getProfile(trimmed) || defaultProfile(trimmed);
+      localStorage.setItem(storageKey(trimmed), JSON.stringify(existing));
       return true;
+    }
+
+    function getCurrentRankInfo(trophies) {
+      let current = RANK_SYSTEM[0];
+      for (const rank of RANK_SYSTEM) {
+        if (trophies >= rank.min) current = rank;
+      }
+      return current;
+    }
+
+    function getNextRankInfo(trophies) {
+      for (const rank of RANK_SYSTEM) {
+        if (trophies < rank.min) return rank;
+      }
+      return null;
+    }
+
+    function updateLobbyProfileUI() {
+      const rank = getCurrentRankInfo(state.trophies);
+      const next = getNextRankInfo(state.trophies);
+      els.trophyBadge.textContent = `트로피 ${state.trophies}`;
+      els.rankBadge.textContent = next ? `등급 ${rank.name} · 다음 ${next.name}까지 ${next.min - state.trophies}` : `최고 등급 ${rank.name}`;
+      els.rankBadge.style.color = rank.color;
+      els.rankBadge.style.borderColor = rank.color;
+      els.rankBadge.style.background = rank.color + '22';
     }
 
     function formatRank(index) {
@@ -754,30 +925,33 @@
 
     function currentIncome(level) {
       if (level === 0) return 100;
-      if (level <= SAFE_UPGRADES.length) return SAFE_UPGRADES[level - 1].income;
-      const extra = level - SAFE_UPGRADES.length;
+      if (level <= EARLY_SAFE_UPGRADES.length) return EARLY_SAFE_UPGRADES[level - 1].income;
+      const extra = level - EARLY_SAFE_UPGRADES.length;
       return 1500 * Math.pow(2, extra);
     }
+
     function nextSafeCost(level) {
-      if (level < SAFE_UPGRADES.length) return SAFE_UPGRADES[level].cost;
-      const extra = level - SAFE_UPGRADES.length;
+      if (level < EARLY_SAFE_UPGRADES.length) return EARLY_SAFE_UPGRADES[level].cost;
+      const extra = level - EARLY_SAFE_UPGRADES.length;
       return 20000 * Math.pow(2, extra);
     }
+
     function currentSafeHpBonus(level) {
       let bonus = 0;
       for (let i = 1; i <= level; i++) {
-        if (i <= SAFE_UPGRADES.length) bonus += SAFE_UPGRADES[i - 1].hpBonus;
+        if (i <= EARLY_SAFE_UPGRADES.length) bonus += EARLY_SAFE_UPGRADES[i - 1].hpBonus;
         else {
-          const extra = i - SAFE_UPGRADES.length;
-          bonus += 12000 * Math.pow(1.6, extra);
+          const extra = i - EARLY_SAFE_UPGRADES.length;
+          bonus += Math.floor(12000 * Math.pow(1.6, extra));
         }
       }
-      return Math.floor(bonus);
+      return bonus;
     }
+
     function currentSafeMaxHp(level) {
       return BASE_SAFE_HP + currentSafeHpBonus(level);
     }
-    function nextRankCost(rankIndex) { return 1000 * Math.pow(2, rankIndex); }
+
     function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
     function distance(a, b) {
       const dx = a.x - b.x;
@@ -785,6 +959,12 @@
       return Math.hypot(dx, dy);
     }
     function uid() { return Date.now() + '-' + Math.random().toString(36).slice(2, 9); }
+
+    function randomEnemyName() {
+      let name = ENEMY_NAME_POOL[Math.floor(Math.random() * ENEMY_NAME_POOL.length)];
+      if (name === state.countryName) name += ' II';
+      return name;
+    }
 
     function createUnit(team, rankIndex, x, y) {
       const r = RANKS[rankIndex];
@@ -803,6 +983,10 @@
       };
     }
 
+    function teamCount(team) {
+      return state.units.filter(u => u.team === team).length;
+    }
+
     function setNotice(text) {
       if (state.prepActive) {
         els.notice.innerHTML = `${text}<span class="prep-badge">준비시간 ${Math.ceil(state.prepRemaining / 1000)}초</span>`;
@@ -819,7 +1003,7 @@
       clearInterval(state.prepLoop);
     }
 
-    function resetGame() {
+    function resetGameStateForMatch() {
       clearIntervals();
       state.assaultMode = false;
       state.winner = null;
@@ -839,9 +1023,23 @@
       state.ai = { timer: 0, nextActionAt: 1200, stance: 'defend' };
       state.prepRemaining = PREP_MS;
       state.prepActive = true;
+      state.enemyCountryName = randomEnemyName();
+      state.resultApplied = false;
+      state.rankRewardQueue = [];
       els.resultOverlay.classList.remove('show');
+      resetSafeVisuals();
       setNotice('준비시간입니다. 금고 강화와 군사 준비를 진행하세요.');
       renderBattle();
+    }
+
+    function resetSafeVisuals() {
+      const playerBox = document.querySelector('#playerSafe .safe-box');
+      const enemyBox = document.querySelector('#enemySafe .safe-box');
+      [playerBox, enemyBox].forEach(box => {
+        box.style.opacity = '1';
+        box.style.transform = 'scale(1)';
+        box.innerHTML = '🏦';
+      });
     }
 
     function startLoading() {
@@ -862,12 +1060,22 @@
         if (p >= 100) {
           clearInterval(state.loadingTimer);
           setTimeout(() => {
-            resetGame();
-            showScreen('battle');
-            startGameLoops();
+            resetGameStateForMatch();
+            showVSOverlay();
           }, 220);
         }
       }, 80);
+    }
+
+    function showVSOverlay() {
+      els.vsPlayerName.textContent = state.countryName;
+      els.vsEnemyName.textContent = state.enemyCountryName;
+      els.vsOverlay.classList.add('show');
+      setTimeout(() => {
+        els.vsOverlay.classList.remove('show');
+        showScreen('battle');
+        startGameLoops();
+      }, 1800);
     }
 
     function startGameLoops() {
@@ -913,6 +1121,7 @@
       const enemyUnits = state.units.filter(u => u.team === 'enemy');
       const playerUnits = state.units.filter(u => u.team === 'player');
       const enemyIncome = currentIncome(state.enemySafeUpgradeLevel);
+      const playerIncome = currentIncome(state.safeUpgradeLevel);
       const pressureOnEnemy = enemyUnits.some(u => u.x > FIELD_W * 0.64);
       const pressureOnPlayer = playerUnits.some(u => u.x < FIELD_W * 0.36);
       const enemySafeCost = nextSafeCost(state.enemySafeUpgradeLevel);
@@ -921,7 +1130,7 @@
       const enemyCount = enemyUnits.length;
 
       if (state.prepActive) {
-        if (enemySafeCost && state.enemyCoins >= enemySafeCost && (enemyIncome < currentIncome(state.safeUpgradeLevel) || Math.random() < 0.62)) {
+        if (enemySafeCost && state.enemyCoins >= enemySafeCost && (enemyIncome < playerIncome || Math.random() < 0.62)) {
           state.enemyCoins -= enemySafeCost;
           state.enemySafeUpgradeLevel += 1;
           const newMax = currentSafeMaxHp(state.enemySafeUpgradeLevel);
@@ -930,12 +1139,12 @@
           state.enemySafeHp += delta;
           return;
         }
-        if (state.enemyRankIndex < RANKS.length - 1 && state.enemyCoins >= enemyRankCost && (state.enemyRankIndex <= state.playerRankIndex || Math.random() < 0.7)) {
+        if (state.enemyRankIndex < RANKS.length - 1 && state.enemyCoins >= enemyRankCost && (state.enemyRankIndex <= state.playerRankIndex || Math.random() < 0.72)) {
           state.enemyCoins -= enemyRankCost;
           state.enemyRankIndex += 1;
           return;
         }
-        if (enemyCount < 10 && state.enemyCoins >= eSummonCost) {
+        if (enemyCount < MAX_UNITS_PER_TEAM && state.enemyCoins >= eSummonCost) {
           state.enemyCoins -= eSummonCost;
           state.units.push(createUnit('enemy', state.enemyRankIndex, ENEMY_SAFE_X - 70 - Math.random() * 22, SAFE_Y + (Math.random() * 70 - 35)));
         }
@@ -946,8 +1155,8 @@
       else if (pressureOnEnemy || enemyUnits.length < playerUnits.length) state.ai.stance = 'defend';
       else state.ai.stance = Math.random() < 0.5 ? 'defend' : 'aggressive';
 
-      const shouldEco = state.enemySafeUpgradeLevel < state.safeUpgradeLevel || enemyIncome < currentIncome(state.safeUpgradeLevel) || Math.random() < 0.28;
-      const shouldRank = state.enemyRankIndex < state.playerRankIndex || (enemyUnits.length >= 2 && Math.random() < 0.52);
+      const shouldEco = state.enemySafeUpgradeLevel < state.safeUpgradeLevel || enemyIncome < playerIncome || Math.random() < 0.3;
+      const shouldRank = state.enemyRankIndex < state.playerRankIndex || (enemyUnits.length >= 2 && Math.random() < 0.56);
 
       if (enemySafeCost && state.enemyCoins >= enemySafeCost && shouldEco) {
         state.enemyCoins -= enemySafeCost;
@@ -960,10 +1169,10 @@
         state.enemyCoins -= enemyRankCost;
         state.enemyRankIndex += 1;
       } else {
-        const targetArmy = Math.min(10, Math.max(3, Math.ceil(playerUnits.length * 1.05)));
+        const targetArmy = Math.min(MAX_UNITS_PER_TEAM, Math.max(4, Math.ceil(playerUnits.length * 1.05)));
         const summonTimes = enemyCount < targetArmy ? 2 : 1;
         for (let i = 0; i < summonTimes; i++) {
-          if (state.units.filter(u => u.team === 'enemy').length >= 10) break;
+          if (teamCount('enemy') >= MAX_UNITS_PER_TEAM) break;
           if (state.enemyCoins >= eSummonCost) {
             state.enemyCoins -= eSummonCost;
             state.units.push(createUnit('enemy', state.enemyRankIndex, ENEMY_SAFE_X - 70 - Math.random() * 22, SAFE_Y + (Math.random() * 70 - 35)));
@@ -1054,12 +1263,12 @@
       state.playerSafeHp = Math.max(0, playerSafeHp);
       state.enemySafeHp = Math.max(0, enemySafeHp);
 
-      if (state.enemySafeHp <= 0 && !state.winner) {
+      if (state.enemySafeHp <= 0 && !state.winner && !state.enemySafeExploding) {
         state.enemySafeHp = 0;
         state.enemySafeExploding = true;
         triggerSafeExplosion('enemy');
       }
-      if (state.playerSafeHp <= 0 && !state.winner) {
+      if (state.playerSafeHp <= 0 && !state.winner && !state.playerSafeExploding) {
         state.playerSafeHp = 0;
         state.playerSafeExploding = true;
         triggerSafeExplosion('player');
@@ -1070,7 +1279,7 @@
       const pIncome = currentIncome(state.safeUpgradeLevel);
       const eIncome = currentIncome(state.enemySafeUpgradeLevel);
       els.playerBadge.textContent = `${state.countryName} · ${Math.floor(state.coins)} 코인 · ${pIncome}/s`;
-      els.enemyBadge.textContent = `적군 · ${Math.floor(state.enemyCoins)} 코인 · ${eIncome}/s`;
+      els.enemyBadge.textContent = `${state.enemyCountryName || '적군'} · ${Math.floor(state.enemyCoins)} 코인 · ${eIncome}/s`;
 
       const safeCost = nextSafeCost(state.safeUpgradeLevel);
       els.safeCurrent.textContent = `현재 생산량: ${pIncome}/s · 현재 체력: ${Math.floor(state.playerSafeMaxHp)}`;
@@ -1088,7 +1297,7 @@
 
       const summon = summonCost(state.playerRankIndex);
       els.summonNow.innerHTML = `현재 소환 군사: <span style="color:${rank.color}; font-weight:900;">${formatRank(state.playerRankIndex)}</span>`;
-      els.summonCostText.textContent = `소환 비용: ${summon}`;
+      els.summonCostText.textContent = `소환 비용: ${summon} · 최대 10명`;
       els.summonCostBadge.textContent = summon;
       els.summonCostBadge.style.color = rank.color;
       els.summonCostBadge.style.borderColor = rank.color;
@@ -1108,10 +1317,8 @@
     }
 
     function renderCounts() {
-      const p = state.units.filter(u => u.team === 'player').length;
-      const e = state.units.filter(u => u.team === 'enemy').length;
-      els.playerCount.textContent = `아군: ${p}명`;
-      els.enemyCount.textContent = `적군: ${e}명`;
+      els.playerCount.textContent = `아군: ${teamCount('player')}명`;
+      els.enemyCount.textContent = `적군: ${teamCount('enemy')}명`;
     }
 
     function renderBattleUnits() {
@@ -1132,10 +1339,35 @@
       });
     }
 
-    function showResult(title, text) {
+    function showResult(title, text, rewardText) {
       els.resultTitle.textContent = title;
       els.resultText.textContent = text;
+      els.resultRewardText.textContent = rewardText || '';
       els.resultOverlay.classList.add('show');
+    }
+
+    function applyMatchResult(result) {
+      if (state.resultApplied) return;
+      state.resultApplied = true;
+      const oldRank = getCurrentRankInfo(state.trophies);
+      state.trophies = Math.max(0, state.trophies + (result === 'win' ? 10 : -4));
+      const newRank = getCurrentRankInfo(state.trophies);
+      let rewardCoins = 0;
+      for (const rank of RANK_SYSTEM) {
+        if (state.trophies >= rank.min && !state.claimedRankRewards.includes(rank.name)) {
+          state.claimedRankRewards.push(rank.name);
+          rewardCoins += rank.reward;
+        }
+      }
+      if (rewardCoins > 0) {
+        state.rankRewardQueue.push(`${newRank.name} 포함 보상 코인 +${rewardCoins}`);
+      }
+      state.bestRankName = getCurrentRankInfo(state.trophies).name;
+      saveProfile();
+      updateLobbyProfileUI();
+      const deltaText = result === 'win' ? '+10 트로피' : '-4 트로피';
+      const rewardText = rewardCoins > 0 ? `${deltaText} · 승급 보상 +${rewardCoins} 코인` : deltaText;
+      return rewardText;
     }
 
     function playerBuySafeUpgrade() {
@@ -1154,6 +1386,8 @@
       setNotice(`금고 생산량이 ${currentIncome(state.safeUpgradeLevel)}/s 로 강화되고 체력도 증가했습니다!`);
       renderBattle();
     }
+
+    function nextRankCost(rankIndex) { return 1000 * Math.pow(2, rankIndex); }
 
     function playerBuyRankUpgrade() {
       if (state.winner) return;
@@ -1174,8 +1408,7 @@
 
     function playerSummon() {
       if (state.winner) return;
-      const playerCount = state.units.filter(u => u.team === 'player').length;
-      if (playerCount >= 10) {
+      if (teamCount('player') >= MAX_UNITS_PER_TEAM) {
         setNotice('아군 군사는 최대 10명까지 소환할 수 있습니다.');
         return;
       }
@@ -1189,66 +1422,6 @@
       setNotice(`${formatRank(state.playerRankIndex)} 군사를 소환했습니다.`);
       renderBattle();
     }
-
-    function openLobby(name) {
-      state.countryName = name;
-      els.countryNameLobby.textContent = name;
-      els.selectedMapText.textContent = `선택 맵: ${state.selectedMap}`;
-      showScreen('lobby');
-    }
-
-    document.getElementById('startNewBtn').onclick = () => {
-      const name = els.newCountryInput.value.trim();
-      if (!name) {
-        alert('나라 이름을 입력하세요.');
-        return;
-      }
-      registerCountry(name);
-      renderRecentCountries();
-      openLobby(name);
-    };
-
-    document.getElementById('loadBtn').onclick = () => {
-      const name = els.loadCountryInput.value.trim();
-      if (!name) {
-        alert('나라 이름을 입력하세요.');
-        return;
-      }
-      const list = getCountryList();
-      if (!list.includes(name) && !localStorage.getItem(`vault-defense-save-${name}`)) {
-        alert('저장된 나라 이름이 없습니다.');
-        return;
-      }
-      localStorage.setItem('vault-defense-last-country', name);
-      openLobby(name);
-    };
-
-    document.getElementById('backToSetupBtn').onclick = () => {
-      showScreen('setup');
-      renderRecentCountries();
-    };
-
-    document.getElementById('openMapBtn').onclick = () => {
-      els.mapOverlay.classList.add('show');
-    };
-
-    document.getElementById('closeMapBtn').onclick = () => {
-      els.mapOverlay.classList.remove('show');
-    };
-
-    document.getElementById('selectMapBtn').onclick = () => {
-      state.selectedMap = '1 vs 1 경기장';
-      els.selectedMapText.textContent = `선택 맵: ${state.selectedMap}`;
-      els.mapOverlay.classList.remove('show');
-    };
-
-    document.getElementById('playBtn').onclick = () => { startLoading(); };
-    document.getElementById('exitBattleBtn').onclick = () => { clearIntervals(); showScreen('lobby'); };
-    document.getElementById('resultBackBtn').onclick = () => { clearIntervals(); els.resultOverlay.classList.remove('show'); showScreen('lobby'); };
-
-    document.getElementById('safeUpgradeBtn').onclick = playerBuySafeUpgrade;
-    document.getElementById('rankUpgradeBtn').onclick = playerBuyRankUpgrade;
-    document.getElementById('summonBtn').onclick = playerSummon;
 
     function triggerSafeExplosion(team) {
       const safeEl = document.getElementById(team === 'player' ? 'playerSafe' : 'enemySafe');
@@ -1283,17 +1456,90 @@
 
       setTimeout(() => {
         if (state.winner) return;
+        let rewardText = '';
         if (team === 'enemy') {
           state.winner = 'player';
-          showResult('승리!', '적 금고를 먼저 파괴했습니다.');
+          rewardText = applyMatchResult('win');
+          showResult('승리!', '적 금고를 먼저 파괴했습니다.', rewardText);
           setNotice('승리! 적 금고가 폭발했습니다.');
         } else {
           state.winner = 'enemy';
-          showResult('패배', '아군 금고가 파괴되었습니다.');
+          rewardText = applyMatchResult('lose');
+          showResult('패배', '아군 금고가 파괴되었습니다.', rewardText);
           setNotice('패배... 아군 금고가 폭발했습니다.');
         }
       }, 920);
     }
+
+    function openLobby(name) {
+      state.countryName = name;
+      const profile = getProfile(name) || defaultProfile(name);
+      state.trophies = profile.trophies || 0;
+      state.bestRankName = profile.bestRankName || 'F';
+      state.claimedRankRewards = Array.isArray(profile.claimedRankRewards) ? profile.claimedRankRewards : [];
+      els.countryNameLobby.textContent = name;
+      els.selectedMapText.textContent = `선택 맵: ${state.selectedMap}`;
+      updateLobbyProfileUI();
+      showScreen('lobby');
+    }
+
+    document.getElementById('startNewBtn').onclick = () => {
+      const name = els.newCountryInput.value.trim();
+      if (!name) {
+        alert('나라 이름을 입력하세요.');
+        return;
+      }
+      registerCountry(name);
+      renderRecentCountries();
+      openLobby(name);
+    };
+
+    document.getElementById('loadBtn').onclick = () => {
+      const name = els.loadCountryInput.value.trim();
+      if (!name) {
+        alert('나라 이름을 입력하세요.');
+        return;
+      }
+      const list = getCountryList();
+      if (!list.includes(name) && !getProfile(name)) {
+        alert('저장된 나라 이름이 없습니다.');
+        return;
+      }
+      localStorage.setItem('vault-defense-last-country', name);
+      openLobby(name);
+    };
+
+    document.getElementById('backToSetupBtn').onclick = () => {
+      showScreen('setup');
+      renderRecentCountries();
+    };
+
+    document.getElementById('openMapBtn').onclick = () => {
+      els.mapOverlay.classList.add('show');
+    };
+
+    document.getElementById('closeMapBtn').onclick = () => {
+      els.mapOverlay.classList.remove('show');
+    };
+
+    document.getElementById('selectMapBtn').onclick = () => {
+      state.selectedMap = '1 vs 1 경기장';
+      els.selectedMapText.textContent = `선택 맵: ${state.selectedMap}`;
+      els.mapOverlay.classList.remove('show');
+    };
+
+    document.getElementById('playBtn').onclick = () => { startLoading(); };
+    document.getElementById('exitBattleBtn').onclick = () => { clearIntervals(); showScreen('lobby'); };
+    document.getElementById('resultBackBtn').onclick = () => {
+      clearIntervals();
+      els.resultOverlay.classList.remove('show');
+      showScreen('lobby');
+      updateLobbyProfileUI();
+    };
+
+    document.getElementById('safeUpgradeBtn').onclick = playerBuySafeUpgrade;
+    document.getElementById('rankUpgradeBtn').onclick = playerBuyRankUpgrade;
+    document.getElementById('summonBtn').onclick = playerSummon;
 
     document.getElementById('attackBtn').onclick = () => {
       if (state.winner) return;
