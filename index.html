@@ -483,8 +483,7 @@
       <div class="topbar">
         <button id="backToSetupBtn" class="btn btn-gray">← 뒤로</button>
         <div class="badge-row">
-          <div id="trophyBadge" class="badge trophy"></div>
-          <div id="rankBadge" class="rank-chip"></div>
+          <button id="openTrophyBtn" class="badge trophy" style="cursor:pointer;"></button>
         </div>
         <div style="text-align:right;">
           <div style="color:#94a3b8; font-size:14px;">현재 나라</div>
@@ -613,6 +612,19 @@
       </div>
     </div>
   </section>
+
+  <div id="trophyOverlay" class="overlay">
+    <div class="overlay-box" style="text-align:left; max-width:760px;">
+      <div class="section-head" style="font-size:30px; margin-bottom:12px;">트로피</div>
+      <div id="trophySummaryLine" style="color:#e2e8f0; font-weight:900; margin-bottom:12px;"></div>
+      <div style="margin-bottom:10px; color:#cbd5e1; font-weight:700;">현재 등급 진행도</div>
+      <div class="hpbar" style="width:100%; height:18px; margin:0 0 8px 0;"><div id="trophyGaugeFill" class="hpfill blue" style="width:0%;"></div></div>
+      <div id="trophyGaugeText" style="color:#cbd5e1; margin-bottom:16px;"></div>
+      <div style="margin-bottom:10px; color:#cbd5e1; font-weight:700;">등급 목록</div>
+      <div id="trophyRankList" style="display:grid; gap:8px; max-height:42vh; overflow:auto; padding-right:4px;"></div>
+      <button id="closeTrophyBtn" class="btn btn-gray full" style="margin-top:14px;">닫기</button>
+    </div>
+  </div>
 
   <div id="resultOverlay" class="overlay">
     <div class="overlay-box">
@@ -764,6 +776,12 @@
       summonNow: document.getElementById('summonNow'),
       summonCostText: document.getElementById('summonCostText'),
       summonCostBadge: document.getElementById('summonCostBadge'),
+      trophyOverlay: document.getElementById('trophyOverlay'),
+      openTrophyBtn: document.getElementById('openTrophyBtn'),
+      trophySummaryLine: document.getElementById('trophySummaryLine'),
+      trophyGaugeFill: document.getElementById('trophyGaugeFill'),
+      trophyGaugeText: document.getElementById('trophyGaugeText'),
+      trophyRankList: document.getElementById('trophyRankList'),
       resultOverlay: document.getElementById('resultOverlay'),
       resultTitle: document.getElementById('resultTitle'),
       resultText: document.getElementById('resultText'),
@@ -900,12 +918,45 @@
 
     function updateLobbyProfileUI() {
       const rank = getCurrentRankInfo(state.trophies);
+      els.openTrophyBtn.textContent = `🏆 ${state.trophies} · ${rank.name}`;
+      renderTrophyOverlay();
+    }
+
+    function renderTrophyOverlay() {
+      const rank = getCurrentRankInfo(state.trophies);
       const next = getNextRankInfo(state.trophies);
-      els.trophyBadge.textContent = `트로피 ${state.trophies}`;
-      els.rankBadge.textContent = next ? `등급 ${rank.name} · 다음 ${next.name}까지 ${next.min - state.trophies}` : `최고 등급 ${rank.name}`;
-      els.rankBadge.style.color = rank.color;
-      els.rankBadge.style.borderColor = rank.color;
-      els.rankBadge.style.background = rank.color + '22';
+      els.trophySummaryLine.textContent = `현재 트로피 ${state.trophies} · 현재 등급 ${rank.name}`;
+      let gaugePercent = 100;
+      let gaugeText = '최고 등급 구간입니다.';
+      const currentIndex = RANK_SYSTEM.findIndex(r => r.name === rank.name);
+      if (next && currentIndex >= 0) {
+        const prevMin = rank.min;
+        const span = Math.max(1, next.min - prevMin);
+        gaugePercent = Math.max(0, Math.min(100, ((state.trophies - prevMin) / span) * 100));
+        gaugeText = `${next.name}까지 ${next.min - state.trophies} 트로피 남음`;
+      }
+      els.trophyGaugeFill.style.width = gaugePercent + '%';
+      els.trophyGaugeText.textContent = gaugeText;
+
+      els.trophyRankList.innerHTML = '';
+      RANK_SYSTEM.forEach((r, idx) => {
+        const reached = state.trophies >= r.min;
+        const isCurrent = r.name === rank.name;
+        const nextRank = RANK_SYSTEM[idx + 1];
+        const row = document.createElement('div');
+        row.style.border = `1px solid ${r.color}55`;
+        row.style.background = isCurrent ? `${r.color}22` : (reached ? 'rgba(30,41,59,0.92)' : 'rgba(2,6,23,0.7)');
+        row.style.borderRadius = '18px';
+        row.style.padding = '12px 14px';
+        row.innerHTML = `
+          <div style="display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap;">
+            <div style="font-weight:900; color:${r.color};">${r.name}${isCurrent ? ' · 현재 등급' : reached ? ' · 달성' : ''}</div>
+            <div style="color:#cbd5e1; font-size:14px;">목표 ${r.min} 트로피 · 보상 ${r.reward} 코인</div>
+          </div>
+          <div style="color:#94a3b8; margin-top:4px; font-size:14px;">${nextRank ? `${nextRank.name} 전 단계` : '최종 등급'}</div>
+        `;
+        els.trophyRankList.appendChild(row);
+      });
     }
 
     function formatRank(index) {
@@ -1122,15 +1173,19 @@
       const playerUnits = state.units.filter(u => u.team === 'player');
       const enemyIncome = currentIncome(state.enemySafeUpgradeLevel);
       const playerIncome = currentIncome(state.safeUpgradeLevel);
-      const pressureOnEnemy = enemyUnits.some(u => u.x > FIELD_W * 0.64);
-      const pressureOnPlayer = playerUnits.some(u => u.x < FIELD_W * 0.36);
       const enemySafeCost = nextSafeCost(state.enemySafeUpgradeLevel);
       const enemyRankCost = nextRankCost(state.enemyRankIndex);
       const eSummonCost = summonCost(state.enemyRankIndex);
       const enemyCount = enemyUnits.length;
+      const pressureOnEnemy = enemyUnits.some(u => u.x > FIELD_W * 0.64);
+      const pressureOnPlayer = playerUnits.some(u => u.x < FIELD_W * 0.36);
+      const savingTarget = Math.max(enemySafeCost || 0, enemyRankCost || 0, eSummonCost * 2);
+      const hasReserve = state.enemyCoins >= savingTarget;
 
       if (state.prepActive) {
-        if (enemySafeCost && state.enemyCoins >= enemySafeCost && (enemyIncome < playerIncome || Math.random() < 0.62)) {
+        if (!hasReserve && Math.random() < 0.35) return;
+
+        if (enemySafeCost && state.enemyCoins >= enemySafeCost && (enemyIncome < playerIncome || state.enemySafeUpgradeLevel < state.safeUpgradeLevel || Math.random() < 0.48)) {
           state.enemyCoins -= enemySafeCost;
           state.enemySafeUpgradeLevel += 1;
           const newMax = currentSafeMaxHp(state.enemySafeUpgradeLevel);
@@ -1139,49 +1194,59 @@
           state.enemySafeHp += delta;
           return;
         }
-        if (state.enemyRankIndex < RANKS.length - 1 && state.enemyCoins >= enemyRankCost && (state.enemyRankIndex <= state.playerRankIndex || Math.random() < 0.72)) {
+        if (state.enemyRankIndex < RANKS.length - 1 && state.enemyCoins >= enemyRankCost && (state.enemyRankIndex <= state.playerRankIndex || Math.random() < 0.58)) {
           state.enemyCoins -= enemyRankCost;
           state.enemyRankIndex += 1;
           return;
         }
-        if (enemyCount < MAX_UNITS_PER_TEAM && state.enemyCoins >= eSummonCost) {
+        if (enemyCount < MAX_UNITS_PER_TEAM && state.enemyCoins >= eSummonCost && (enemyCount < 4 || state.enemyCoins >= eSummonCost * 2.2)) {
           state.enemyCoins -= eSummonCost;
           state.units.push(createUnit('enemy', state.enemyRankIndex, ENEMY_SAFE_X - 70 - Math.random() * 22, SAFE_Y + (Math.random() * 70 - 35)));
         }
         return;
       }
 
-      if (pressureOnPlayer || state.enemySafeHp < state.playerSafeHp) state.ai.stance = 'aggressive';
-      else if (pressureOnEnemy || enemyUnits.length < playerUnits.length) state.ai.stance = 'defend';
+      if (pressureOnPlayer || state.enemySafeHp < state.playerSafeHp * 0.9) state.ai.stance = 'aggressive';
+      else if (pressureOnEnemy || enemyUnits.length + 1 < playerUnits.length) state.ai.stance = 'defend';
       else state.ai.stance = Math.random() < 0.5 ? 'defend' : 'aggressive';
 
-      const shouldEco = state.enemySafeUpgradeLevel < state.safeUpgradeLevel || enemyIncome < playerIncome || Math.random() < 0.3;
-      const shouldRank = state.enemyRankIndex < state.playerRankIndex || (enemyUnits.length >= 2 && Math.random() < 0.56);
+      const shouldEco = enemySafeCost && (state.enemySafeUpgradeLevel < state.safeUpgradeLevel || enemyIncome < playerIncome || state.enemySafeHp < state.enemySafeMaxHp * 0.72);
+      const shouldRank = state.enemyRankIndex < state.playerRankIndex || (enemyCount >= 3 && Math.random() < 0.45);
+      const wantArmy = Math.min(MAX_UNITS_PER_TEAM, Math.max(4, Math.ceil(playerUnits.length * (state.ai.stance === 'aggressive' ? 1.15 : 0.95))));
 
-      if (enemySafeCost && state.enemyCoins >= enemySafeCost && shouldEco) {
+      if (!hasReserve && enemyCount >= Math.max(3, playerUnits.length) && Math.random() < 0.5) {
+        state.units.forEach(u => {
+          if (u.team === 'enemy') u.engaged = false;
+        });
+        return;
+      }
+
+      if (shouldEco && state.enemyCoins >= enemySafeCost && (state.enemyCoins >= enemySafeCost + eSummonCost || enemyCount >= 4)) {
         state.enemyCoins -= enemySafeCost;
         state.enemySafeUpgradeLevel += 1;
         const newMax = currentSafeMaxHp(state.enemySafeUpgradeLevel);
         const delta = newMax - state.enemySafeMaxHp;
         state.enemySafeMaxHp = newMax;
         state.enemySafeHp += delta;
-      } else if (state.enemyRankIndex < RANKS.length - 1 && state.enemyCoins >= enemyRankCost && shouldRank) {
+      } else if (shouldRank && state.enemyCoins >= enemyRankCost && (state.enemyCoins >= enemyRankCost + eSummonCost || enemyCount >= 3)) {
         state.enemyCoins -= enemyRankCost;
         state.enemyRankIndex += 1;
-      } else {
-        const targetArmy = Math.min(MAX_UNITS_PER_TEAM, Math.max(4, Math.ceil(playerUnits.length * 1.05)));
-        const summonTimes = enemyCount < targetArmy ? 2 : 1;
+      } else if (enemyCount < wantArmy && state.enemyCoins >= eSummonCost && (state.enemyCoins >= eSummonCost * 1.4 || enemyCount <= 2)) {
+        const summonTimes = state.enemyCoins >= eSummonCost * 2.8 && enemyCount + 1 < wantArmy ? 2 : 1;
         for (let i = 0; i < summonTimes; i++) {
           if (teamCount('enemy') >= MAX_UNITS_PER_TEAM) break;
-          if (state.enemyCoins >= eSummonCost) {
-            state.enemyCoins -= eSummonCost;
-            state.units.push(createUnit('enemy', state.enemyRankIndex, ENEMY_SAFE_X - 70 - Math.random() * 22, SAFE_Y + (Math.random() * 70 - 35)));
-          }
+          if (state.enemyCoins < eSummonCost) break;
+          state.enemyCoins -= eSummonCost;
+          state.units.push(createUnit('enemy', state.enemyRankIndex, ENEMY_SAFE_X - 70 - Math.random() * 22, SAFE_Y + (Math.random() * 70 - 35)));
         }
       }
 
+      const powerGap = enemyUnits.length - playerUnits.length;
+      const canPush = state.enemyRankIndex >= state.playerRankIndex || powerGap >= 1 || state.enemyCoins > eSummonCost * 2.5;
       state.units.forEach(u => {
-        if (u.team === 'enemy') u.engaged = state.ai.stance === 'aggressive' || enemyUnits.length >= playerUnits.length;
+        if (u.team === 'enemy') {
+          u.engaged = state.ai.stance === 'aggressive' ? canPush : (pressureOnPlayer && canPush);
+        }
       });
     }
 
@@ -1507,6 +1572,15 @@
       }
       localStorage.setItem('vault-defense-last-country', name);
       openLobby(name);
+    };
+
+    document.getElementById('openTrophyBtn').onclick = () => {
+      renderTrophyOverlay();
+      els.trophyOverlay.classList.add('show');
+    };
+
+    document.getElementById('closeTrophyBtn').onclick = () => {
+      els.trophyOverlay.classList.remove('show');
     };
 
     document.getElementById('backToSetupBtn').onclick = () => {
