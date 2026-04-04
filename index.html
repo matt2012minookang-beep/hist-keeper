@@ -294,8 +294,7 @@
       width: 108px; height: 108px; border-radius: 24px; border: 4px solid rgba(255,255,255,0.8);
       display: flex; align-items: center; justify-content: center; font-size: 46px;
       box-shadow: 0 0 36px rgba(255,255,255,0.14); margin: 0 auto;
-      position: relative;
-      overflow: hidden;
+      position: relative; overflow: hidden;
     }
     .safe-box.blue { background: #3b82f6; box-shadow: 0 0 36px rgba(59,130,246,0.65); }
     .safe-box.red { background: #ef4444; box-shadow: 0 0 36px rgba(239,68,68,0.65); }
@@ -312,13 +311,9 @@
       position: absolute; transform: translate(-50%, -50%); pointer-events: none; text-align: center;
     }
     .order-arrow {
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
+      position: absolute; inset: 0; pointer-events: none;
     }
-    .delete-cursor {
-      cursor: not-allowed !important;
-    }
+    .delete-cursor { cursor: not-allowed !important; }
     .unit-level {
       font-size: 14px; font-weight: 900; margin-bottom: -4px;
       text-shadow: 0 2px 2px rgba(0,0,0,0.8);
@@ -366,53 +361,27 @@
     .overlay-text { color: #cbd5e1; margin-bottom: 18px; }
     .map-modal-grid { display: grid; gap: 14px; }
     .vs-overlay {
-      position: fixed;
-      inset: 0;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      background: rgba(2,6,23,0.72);
-      z-index: 90;
-      backdrop-filter: blur(4px);
+      position: fixed; inset: 0; display: none; align-items: center; justify-content: center;
+      background: rgba(2,6,23,0.72); z-index: 90; backdrop-filter: blur(4px);
     }
     .vs-overlay.show { display: flex; }
     .vs-box {
-      width: min(860px, 100%);
-      border-radius: 34px;
-      padding: 28px;
+      width: min(860px, 100%); border-radius: 34px; padding: 28px;
       background: linear-gradient(135deg, rgba(30,41,59,0.98), rgba(15,23,42,0.98));
-      border: 1px solid rgba(148,163,184,0.2);
-      box-shadow: 0 30px 80px rgba(0,0,0,0.45);
+      border: 1px solid rgba(148,163,184,0.2); box-shadow: 0 30px 80px rgba(0,0,0,0.45);
     }
     .vs-row {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 18px;
-      align-items: center;
+      display: grid; grid-template-columns: 1fr auto 1fr; gap: 18px; align-items: center;
     }
     .vs-team {
-      border-radius: 24px;
-      padding: 22px;
-      font-weight: 900;
-      font-size: clamp(24px, 4vw, 42px);
-      text-align: center;
+      border-radius: 24px; padding: 22px; font-weight: 900;
+      font-size: clamp(24px, 4vw, 42px); text-align: center;
     }
     .vs-team.blue { background: rgba(37,99,235,0.2); color: #bfdbfe; border: 1px solid rgba(96,165,250,0.45); }
     .vs-team.red { background: rgba(239,68,68,0.16); color: #fecaca; border: 1px solid rgba(248,113,113,0.45); }
     .vs-center {
-      font-size: clamp(42px, 8vw, 76px);
-      font-weight: 900;
-      color: white;
+      font-size: clamp(42px, 8vw, 76px); font-weight: 900; color: white;
       text-shadow: 0 0 28px rgba(255,255,255,0.22);
-    }
-    .rank-chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      padding: 10px 14px;
-      border-radius: 999px;
-      font-weight: 900;
-      border: 1px solid rgba(255,255,255,0.15);
     }
 
     @media (max-width: 980px) {
@@ -460,7 +429,7 @@
           </div>
           <div class="hero-pills">
             <div class="pill">1분 준비시간</div>
-            <div class="pill">공격 / 철수</div>
+            <div class="pill">클릭 지점 공격</div>
             <div class="pill">VS 연출</div>
             <div class="pill">트로피 등급</div>
           </div>
@@ -548,7 +517,7 @@
             <div class="field-grid"></div>
             <div class="field-mid"></div>
             <div class="zone left"></div>
-            <div class="zone.right"></div>
+            <div class="zone right"></div>
 
             <div id="playerSafe" class="safe" style="left:10%; top:50%;">
               <div class="safe-box blue">🏦</div>
@@ -718,31 +687,40 @@
 
     const RANKS = [
       { key: 'bronze1', tier: '브론즈', level: 1, color: '#b87333', hp: 300, atk: 50, speed: 1.04 },
-      { key: 'bronze2', tier: '브론즈', level: 2, color: '#cd7f32', hp: 960, atk: 160, speed: 1.06 },
-      { key: 'bronze3', tier: '브론즈', level: 3, color: '#d28b45', hp: 3000, atk: 500, speed: 1.08 },
-      { key: 'silver1', tier: '실버', level: 1, color: '#c0c0c0', hp: 9300, atk: 1550, speed: 1.10 },
-      { key: 'silver2', tier: '실버', level: 2, color: '#d7dde5', hp: 28800, atk: 4800, speed: 1.12 },
-      { key: 'silver3', tier: '실버', level: 3, color: '#edf2f7', hp: 89100, atk: 14850, speed: 1.14 },
-      { key: 'gold1', tier: '골드', level: 1, color: '#d4af37', hp: 275700, atk: 45950, speed: 1.16 },
-      { key: 'gold2', tier: '골드', level: 2, color: '#e0bb46', hp: 853800, atk: 142300, speed: 1.18 },
-      { key: 'gold3', tier: '골드', level: 3, color: '#f3cc56', hp: 2643300, atk: 440550, speed: 1.20 },
-      { key: 'platinum1', tier: '플래티넘', level: 1, color: '#82e0dd', hp: 8184900, atk: 1364150, speed: 1.22 },
-      { key: 'platinum2', tier: '플래티넘', level: 2, color: '#8eede8', hp: 25373100, atk: 4228850, speed: 1.24 },
-      { key: 'platinum3', tier: '플래티넘', level: 3, color: '#9ff7f1', hp: 78656600, atk: 13109400, speed: 1.26 },
-      { key: 'diamond1', tier: '다이아', level: 1, color: '#76baff', hp: 243835000, atk: 40639150, speed: 1.28 },
-      { key: 'diamond2', tier: '다이아', level: 2, color: '#89c6ff', hp: 755888000, atk: 125981350, speed: 1.30 },
-      { key: 'diamond3', tier: '다이아', level: 3, color: '#9fd4ff', hp: 2343252000, atk: 390542000, speed: 1.32 },
-      { key: 'redDiamond1', tier: '레드 다이아', level: 1, color: '#ff5b6e', hp: 7264081000, atk: 1210680000, speed: 1.34 },
-      { key: 'redDiamond2', tier: '레드 다이아', level: 2, color: '#ff6f82', hp: 22518651000, atk: 3753108500, speed: 1.36 },
-      { key: 'redDiamond3', tier: '레드 다이아', level: 3, color: '#ff8596', hp: 69807743000, atk: 11634624000, speed: 1.38 },
+      { key: 'bronze2', tier: '브론즈', level: 2, color: '#cd7f32', hp: 660, atk: 110, speed: 1.05 },
+      { key: 'bronze3', tier: '브론즈', level: 3, color: '#d28b45', hp: 1450, atk: 242, speed: 1.06 },
+      { key: 'silver1', tier: '실버', level: 1, color: '#c0c0c0', hp: 3190, atk: 532, speed: 1.07 },
+      { key: 'silver2', tier: '실버', level: 2, color: '#d7dde5', hp: 7020, atk: 1170, speed: 1.08 },
+      { key: 'silver3', tier: '실버', level: 3, color: '#edf2f7', hp: 15440, atk: 2574, speed: 1.09 },
+      { key: 'gold1', tier: '골드', level: 1, color: '#d4af37', hp: 33970, atk: 5662, speed: 1.10 },
+      { key: 'gold2', tier: '골드', level: 2, color: '#e0bb46', hp: 74734, atk: 12455, speed: 1.11 },
+      { key: 'gold3', tier: '골드', level: 3, color: '#f3cc56', hp: 164414, atk: 27402, speed: 1.12 },
+      { key: 'platinum1', tier: '플래티넘', level: 1, color: '#82e0dd', hp: 361711, atk: 60285, speed: 1.13 },
+      { key: 'platinum2', tier: '플래티넘', level: 2, color: '#8eede8', hp: 795764, atk: 132627, speed: 1.14 },
+      { key: 'platinum3', tier: '플래티넘', level: 3, color: '#9ff7f1', hp: 1750680, atk: 291780, speed: 1.15 },
+      { key: 'diamond1', tier: '다이아', level: 1, color: '#76baff', hp: 3851500, atk: 641917, speed: 1.16 },
+      { key: 'diamond2', tier: '다이아', level: 2, color: '#89c6ff', hp: 8473300, atk: 1413883, speed: 1.17 },
+      { key: 'diamond3', tier: '다이아', level: 3, color: '#9fd4ff', hp: 18641300, atk: 3110543, speed: 1.18 },
+      { key: 'redDiamond1', tier: '레드 다이아', level: 1, color: '#ff5b6e', hp: 41010900, atk: 6846683, speed: 1.19 },
+      { key: 'redDiamond2', tier: '레드 다이아', level: 2, color: '#ff6f82', hp: 90224000, atk: 15060667, speed: 1.20 },
+      { key: 'redDiamond3', tier: '레드 다이아', level: 3, color: '#ff8596', hp: 198493000, atk: 33111000, speed: 1.21 },
+      { key: 'mythic1', tier: '신화', level: 1, color: '#7c3aed', hp: 436684000, atk: 72780667, speed: 1.22 },
+      { key: 'mythic2', tier: '신화', level: 2, color: '#8b5cf6', hp: 960705000, atk: 160117500, speed: 1.23 },
+      { key: 'mythic3', tier: '신화', level: 3, color: '#a78bfa', hp: 2113550000, atk: 352258500, speed: 1.24 },
+      { key: 'legend1', tier: '전설', level: 1, color: '#f97316', hp: 4649810000, atk: 774968700, speed: 1.25 },
+      { key: 'legend2', tier: '전설', level: 2, color: '#fb923c', hp: 10229580000, atk: 1704931140, speed: 1.26 },
+      { key: 'legend3', tier: '전설', level: 3, color: '#fdba74', hp: 22505080000, atk: 3750848500, speed: 1.27 },
+      { key: 'master1', tier: '마스터', level: 1, color: '#10b981', hp: 49511170000, atk: 8251866700, speed: 1.28 },
+      { key: 'master2', tier: '마스터', level: 2, color: '#34d399', hp: 108924580000, atk: 18154026800, speed: 1.29 },
+      { key: 'master3', tier: '마스터', level: 3, color: '#6ee7b7', hp: 239634100000, atk: 39939017000, speed: 1.30 },
     ];
 
     const EARLY_SAFE_UPGRADES = [
-      { cost: 500, income: 150, hpBonus: 2000 },
-      { cost: 1500, income: 250, hpBonus: 3000 },
-      { cost: 5000, income: 500, hpBonus: 5000 },
-      { cost: 10000, income: 1000, hpBonus: 8000 },
-      { cost: 15000, income: 1500, hpBonus: 12000 },
+      { cost: 500, income: 150, hpBonus: 12000 },
+      { cost: 1500, income: 250, hpBonus: 18000 },
+      { cost: 5000, income: 500, hpBonus: 28000 },
+      { cost: 10000, income: 1000, hpBonus: 45000 },
+      { cost: 15000, income: 1500, hpBonus: 70000 },
     ];
 
     const RANK_SYSTEM = [
@@ -775,22 +753,22 @@
     ];
 
     const ENEMY_PATTERNS = [
-      { name: '균형형', eco: 0.50, rank: 0.50, summon: 0.65, aggression: 0.55, reserve: 1.8 },
-      { name: '저축형', eco: 0.68, rank: 0.46, summon: 0.45, aggression: 0.42, reserve: 2.8 },
-      { name: '성장형', eco: 0.75, rank: 0.60, summon: 0.38, aggression: 0.50, reserve: 2.4 },
-      { name: '기사단형', eco: 0.40, rank: 0.82, summon: 0.52, aggression: 0.64, reserve: 2.2 },
-      { name: '물량형', eco: 0.34, rank: 0.40, summon: 0.90, aggression: 0.67, reserve: 1.4 },
-      { name: '압박형', eco: 0.42, rank: 0.52, summon: 0.72, aggression: 0.82, reserve: 1.6 },
-      { name: '수비형', eco: 0.62, rank: 0.44, summon: 0.50, aggression: 0.34, reserve: 2.6 },
-      { name: '반격형', eco: 0.48, rank: 0.58, summon: 0.60, aggression: 0.46, reserve: 2.0 },
-      { name: '거북형', eco: 0.84, rank: 0.40, summon: 0.28, aggression: 0.22, reserve: 3.2 },
-      { name: '돌파형', eco: 0.38, rank: 0.64, summon: 0.78, aggression: 0.88, reserve: 1.5 },
-      { name: '정예형', eco: 0.46, rank: 0.92, summon: 0.34, aggression: 0.58, reserve: 2.5 },
-      { name: '봉쇄형', eco: 0.55, rank: 0.50, summon: 0.58, aggression: 0.52, reserve: 2.1 },
-      { name: '기습형', eco: 0.36, rank: 0.54, summon: 0.66, aggression: 0.86, reserve: 1.7 },
-      { name: '탐욕형', eco: 0.90, rank: 0.55, summon: 0.25, aggression: 0.30, reserve: 3.8 },
-      { name: '혼합형', eco: 0.58, rank: 0.62, summon: 0.60, aggression: 0.60, reserve: 2.0 },
-      { name: '종결형', eco: 0.30, rank: 0.84, summon: 0.82, aggression: 0.92, reserve: 1.3 },
+      { eco: 0.50, rank: 0.50, summon: 0.65, aggression: 0.55, reserve: 1.8 },
+      { eco: 0.68, rank: 0.46, summon: 0.45, aggression: 0.42, reserve: 2.8 },
+      { eco: 0.75, rank: 0.60, summon: 0.38, aggression: 0.50, reserve: 2.4 },
+      { eco: 0.40, rank: 0.82, summon: 0.52, aggression: 0.64, reserve: 2.2 },
+      { eco: 0.34, rank: 0.40, summon: 0.90, aggression: 0.67, reserve: 1.4 },
+      { eco: 0.42, rank: 0.52, summon: 0.72, aggression: 0.82, reserve: 1.6 },
+      { eco: 0.62, rank: 0.44, summon: 0.50, aggression: 0.34, reserve: 2.6 },
+      { eco: 0.48, rank: 0.58, summon: 0.60, aggression: 0.46, reserve: 2.0 },
+      { eco: 0.84, rank: 0.40, summon: 0.28, aggression: 0.22, reserve: 3.2 },
+      { eco: 0.38, rank: 0.64, summon: 0.78, aggression: 0.88, reserve: 1.5 },
+      { eco: 0.46, rank: 0.92, summon: 0.34, aggression: 0.58, reserve: 2.5 },
+      { eco: 0.55, rank: 0.50, summon: 0.58, aggression: 0.52, reserve: 2.1 },
+      { eco: 0.36, rank: 0.54, summon: 0.66, aggression: 0.86, reserve: 1.7 },
+      { eco: 0.90, rank: 0.55, summon: 0.25, aggression: 0.30, reserve: 3.8 },
+      { eco: 0.58, rank: 0.62, summon: 0.60, aggression: 0.60, reserve: 2.0 },
+      { eco: 0.30, rank: 0.84, summon: 0.82, aggression: 0.92, reserve: 1.3 },
     ];
 
     const els = {
@@ -798,8 +776,6 @@
       loadCountryInput: document.getElementById('loadCountryInput'),
       recentCountries: document.getElementById('recentCountries'),
       countryNameLobby: document.getElementById('countryNameLobby'),
-      trophyBadge: document.getElementById('trophyBadge'),
-      rankBadge: document.getElementById('rankBadge'),
       selectedMapText: document.getElementById('selectedMapText'),
       loadingFill: document.getElementById('loadingFill'),
       loadingText: document.getElementById('loadingText'),
@@ -868,7 +844,7 @@
       playerSafeExploding: false,
       enemySafeExploding: false,
       units: [],
-      ai: { timer: 0, nextActionAt: 1200, stance: 'defend' },
+      ai: { timer: 0, nextActionAt: 1200, stance: 'defend', lockedMs: 0 },
       prepRemaining: PREP_MS,
       prepActive: true,
       trophies: 0,
@@ -982,8 +958,7 @@
       els.trophySummaryLine.textContent = `현재 트로피 ${state.trophies} · 현재 등급 ${rank.name}`;
       let gaugePercent = 100;
       let gaugeText = '최고 등급 구간입니다.';
-      const currentIndex = RANK_SYSTEM.findIndex(r => r.name === rank.name);
-      if (next && currentIndex >= 0) {
+      if (next) {
         const prevMin = rank.min;
         const span = Math.max(1, next.min - prevMin);
         gaugePercent = Math.max(0, Math.min(100, ((state.trophies - prevMin) / span) * 100));
@@ -1028,17 +1003,21 @@
       return cost;
     }
 
+    function nextRankCost(rankIndex) {
+      return 1000 * Math.pow(2, rankIndex);
+    }
+
     function currentIncome(level) {
       if (level === 0) return 100;
       if (level <= EARLY_SAFE_UPGRADES.length) return EARLY_SAFE_UPGRADES[level - 1].income;
       const extra = level - EARLY_SAFE_UPGRADES.length;
-      return 1500 * Math.pow(2, extra);
+      return Math.floor(20000 * Math.pow(1.5, Math.max(0, extra - 1)));
     }
 
     function nextSafeCost(level) {
       if (level < EARLY_SAFE_UPGRADES.length) return EARLY_SAFE_UPGRADES[level].cost;
       const extra = level - EARLY_SAFE_UPGRADES.length;
-      return 20000 * Math.pow(2, extra);
+      return Math.floor(20000 * Math.pow(1.5, extra));
     }
 
     function currentSafeHpBonus(level) {
@@ -1047,7 +1026,7 @@
         if (i <= EARLY_SAFE_UPGRADES.length) bonus += EARLY_SAFE_UPGRADES[i - 1].hpBonus;
         else {
           const extra = i - EARLY_SAFE_UPGRADES.length;
-          bonus += Math.floor(12000 * Math.pow(1.6, extra));
+          bonus += Math.floor(90000 * Math.pow(1.45, extra));
         }
       }
       return bonus;
@@ -1074,17 +1053,9 @@
     function createUnit(team, rankIndex, x, y) {
       const r = RANKS[rankIndex];
       return {
-        id: uid(),
-        team,
-        rankIndex,
-        x,
-        y,
-        hp: r.hp,
-        maxHp: r.hp,
-        atk: r.atk,
-        speed: r.speed,
-        attackCooldown: 0,
-        engaged: false,
+        id: uid(), team, rankIndex, x, y,
+        hp: r.hp, maxHp: r.hp, atk: r.atk, speed: r.speed,
+        attackCooldown: 0, engaged: false,
       };
     }
 
@@ -1135,6 +1106,7 @@
       state.orderPreview = { active: false, x: 0, y: 0 };
       state.deleteMode = false;
       state.rankRewardQueue = [];
+      els.field.classList.remove('delete-cursor');
       els.resultOverlay.classList.remove('show');
       resetSafeVisuals();
       setNotice('준비시간입니다. 금고 강화와 군사 준비를 진행하세요.');
@@ -1210,6 +1182,7 @@
       state.aiLoop = setInterval(() => {
         if (state.winner) return;
         state.ai.timer += TICK;
+        state.ai.lockedMs = Math.max(0, state.ai.lockedMs - TICK);
         if (state.ai.timer < state.ai.nextActionAt) return;
         runEnemyAI();
         state.ai.timer = 0;
@@ -1243,7 +1216,6 @@
 
       if (state.prepActive) {
         if (!hasReserve && Math.random() < (0.55 - pattern.eco * 0.25)) return;
-
         if (enemySafeCost && state.enemyCoins >= enemySafeCost && (enemyIncome < playerIncome || state.enemySafeUpgradeLevel < state.safeUpgradeLevel || Math.random() < pattern.eco)) {
           state.enemyCoins -= enemySafeCost;
           state.enemySafeUpgradeLevel += 1;
@@ -1265,9 +1237,18 @@
         return;
       }
 
-      if (pressureOnPlayer || state.enemySafeHp < state.playerSafeHp * 0.9) state.ai.stance = 'aggressive';
-      else if (pressureOnEnemy || enemyUnits.length + 1 < playerUnits.length) state.ai.stance = 'defend';
-      else state.ai.stance = Math.random() < pattern.aggression ? 'aggressive' : 'defend';
+      if (state.ai.lockedMs <= 0) {
+        if (pressureOnPlayer || state.enemySafeHp < state.playerSafeHp * 0.9) {
+          state.ai.stance = 'aggressive';
+          state.ai.lockedMs = 9000;
+        } else if (pressureOnEnemy || enemyUnits.length + 1 < playerUnits.length) {
+          state.ai.stance = 'defend';
+          state.ai.lockedMs = 7000;
+        } else {
+          state.ai.stance = Math.random() < pattern.aggression ? 'aggressive' : 'defend';
+          state.ai.lockedMs = state.ai.stance === 'aggressive' ? 8000 : 6500;
+        }
+      }
 
       const shouldEco = enemySafeCost && (state.enemySafeUpgradeLevel < state.safeUpgradeLevel || enemyIncome < playerIncome || state.enemySafeHp < state.enemySafeMaxHp * 0.72);
       const shouldRank = state.enemyRankIndex < state.playerRankIndex || (enemyUnits.length >= 3 && Math.random() < pattern.rank);
@@ -1302,11 +1283,13 @@
       }
 
       const canPush = state.enemyRankIndex >= state.playerRankIndex || enemyUnits.length >= playerUnits.length || state.enemyCoins > eSummonCost * pattern.reserve;
-      const shouldRetreat = pressureOnEnemy && enemyUnits.length < playerUnits.length && state.ai.stance === 'defend';
+      const shouldRetreat = pressureOnEnemy && enemyUnits.length + 1 < playerUnits.length && state.ai.stance === 'defend';
       state.units.forEach(u => {
         if (u.team === 'enemy') {
-          if (shouldRetreat) u.engaged = false;
-          else u.engaged = state.ai.stance === 'aggressive' ? canPush : (pressureOnPlayer && canPush && Math.random() < 0.45);
+          if (state.ai.stance === 'aggressive') u.engaged = true;
+          else if (shouldRetreat) u.engaged = false;
+          else if (state.ai.stance === 'defend') u.engaged = false;
+          else u.engaged = pressureOnPlayer && canPush;
         }
       });
     }
@@ -1345,9 +1328,7 @@
         const orderedTargetY = order ? order.y : targetSafeY;
         const safeDistance = Math.hypot(u.x - targetSafeX, u.y - targetSafeY);
         const orderedDistance = Math.hypot(u.x - orderedTargetX, u.y - orderedTargetY);
-        const inSafeRange = safeDistance <= SAFE_RADIUS + 18;
-        const inUnitRange = nearestEnemy ? nearestDist <= 28 : false;
-        const canFollowOrder = !state.prepActive && (u.team === 'player' ? (state.assaultMode || autoDefend || !!order) : (u.engaged || autoDefend));
+        const canFollowOrder = !state.prepActive && (u.team === 'player' ? (!!order || autoDefend) : (u.engaged || autoDefend));
 
         let priorityEnemy = null;
         if (order) {
@@ -1362,16 +1343,16 @@
         }
         const activeEnemy = priorityEnemy || nearestEnemy;
         const activeEnemyDist = activeEnemy ? distance(u, activeEnemy) : Infinity;
+        const inSafeRange = safeDistance <= SAFE_RADIUS + 18;
 
         if (activeEnemy && activeEnemyDist <= 28 && (!order || Math.hypot(u.x - order.x, u.y - order.y) > 110 || priorityEnemy)) {
           if (u.attackCooldown <= 0) {
             activeEnemy.hp -= u.atk;
             u.attackCooldown = 780;
           }
-        } else if (!order && canFollowOrder && inSafeRange) {
+        } else if (!order && u.team === 'enemy' && canFollowOrder && inSafeRange) {
           if (u.attackCooldown <= 0) {
-            if (u.team === 'player') enemySafeHp -= u.atk;
-            else playerSafeHp -= u.atk;
+            playerSafeHp -= u.atk;
             u.attackCooldown = 820;
           }
         } else if (activeEnemy && canFollowOrder && activeEnemyDist < 210 && (!order || priorityEnemy || orderedDistance > 110)) {
@@ -1386,7 +1367,7 @@
           const d = Math.max(1, Math.hypot(dx, dy));
           u.x += (dx / d) * u.speed * 4.0;
           u.y += (dy / d) * u.speed * 4.0;
-        } else if (!order && canFollowOrder) {
+        } else if (!order && u.team === 'enemy' && canFollowOrder) {
           const dx = targetSafeX - u.x;
           const dy = targetSafeY - u.y;
           const d = Math.max(1, Math.hypot(dx, dy));
@@ -1432,9 +1413,8 @@
     function renderBattle() {
       const pIncome = currentIncome(state.safeUpgradeLevel);
       const eIncome = currentIncome(state.enemySafeUpgradeLevel);
-      const pattern = ENEMY_PATTERNS[state.enemyPatternIndex];
       els.playerBadge.textContent = `${state.countryName} · ${Math.floor(state.coins)} 코인 · ${pIncome}/s`;
-      els.enemyBadge.textContent = `${state.enemyCountryName || '적군'} · ${Math.floor(state.enemyCoins)} 코인 · ${eIncome}/s · ${pattern ? pattern.name : ''}`;
+      els.enemyBadge.textContent = `${state.enemyCountryName || '적군'} · ${Math.floor(state.enemyCoins)} 코인 · ${eIncome}/s`;
 
       const safeCost = nextSafeCost(state.safeUpgradeLevel);
       els.safeCurrent.textContent = `현재 생산량: ${pIncome}/s · 현재 체력: ${Math.floor(state.playerSafeMaxHp)}`;
@@ -1518,7 +1498,6 @@
     function applyMatchResult(result) {
       if (state.resultApplied) return;
       state.resultApplied = true;
-      const oldRank = getCurrentRankInfo(state.trophies);
       state.trophies = Math.max(0, state.trophies + (result === 'win' ? 10 : -4));
       const newRank = getCurrentRankInfo(state.trophies);
       let rewardCoins = 0;
@@ -1528,15 +1507,11 @@
           rewardCoins += rank.reward;
         }
       }
-      if (rewardCoins > 0) {
-        state.rankRewardQueue.push(`${newRank.name} 포함 보상 코인 +${rewardCoins}`);
-      }
-      state.bestRankName = getCurrentRankInfo(state.trophies).name;
+      state.bestRankName = newRank.name;
       saveProfile();
       updateLobbyProfileUI();
       const deltaText = result === 'win' ? '+10 트로피' : '-4 트로피';
-      const rewardText = rewardCoins > 0 ? `${deltaText} · 승급 보상 +${rewardCoins} 코인` : deltaText;
-      return rewardText;
+      return rewardCoins > 0 ? `${deltaText} · 승급 보상 +${rewardCoins} 코인` : deltaText;
     }
 
     function playerBuySafeUpgrade() {
@@ -1552,11 +1527,9 @@
       const delta = newMax - state.playerSafeMaxHp;
       state.playerSafeMaxHp = newMax;
       state.playerSafeHp += delta;
-      setNotice(`금고 생산량이 ${currentIncome(state.safeUpgradeLevel)}/s 로 강화되고 체력도 증가했습니다!`);
+      setNotice(`금고 생산량이 ${currentIncome(state.safeUpgradeLevel)}/s 로 강화되고 체력도 크게 증가했습니다!`);
       renderBattle();
     }
-
-    function nextRankCost(rankIndex) { return 1000 * Math.pow(2, rankIndex); }
 
     function playerBuyRankUpgrade() {
       if (state.winner) return;
@@ -1682,24 +1655,13 @@
       renderTrophyOverlay();
       els.trophyOverlay.classList.add('show');
     };
-
-    document.getElementById('closeTrophyBtn').onclick = () => {
-      els.trophyOverlay.classList.remove('show');
-    };
-
+    document.getElementById('closeTrophyBtn').onclick = () => { els.trophyOverlay.classList.remove('show'); };
     document.getElementById('backToSetupBtn').onclick = () => {
       showScreen('setup');
       renderRecentCountries();
     };
-
-    document.getElementById('openMapBtn').onclick = () => {
-      els.mapOverlay.classList.add('show');
-    };
-
-    document.getElementById('closeMapBtn').onclick = () => {
-      els.mapOverlay.classList.remove('show');
-    };
-
+    document.getElementById('openMapBtn').onclick = () => { els.mapOverlay.classList.add('show'); };
+    document.getElementById('closeMapBtn').onclick = () => { els.mapOverlay.classList.remove('show'); };
     document.getElementById('selectMapBtn').onclick = () => {
       state.selectedMap = '1 vs 1 경기장';
       els.selectedMapText.textContent = `선택 맵: ${state.selectedMap}`;
@@ -1732,7 +1694,9 @@
       }
       state.assaultMode = true;
       state.activeMoveOrder = null;
-      setNotice('공격 명령 대기중. 전장에 마우스를 움직인 뒤 원하는 위치를 클릭하세요.');
+      state.orderPreview = { active: true, x: FRIENDLY_SAFE_X + 140, y: SAFE_Y };
+      renderOrderArrow();
+      setNotice('공격 명령 대기중. 화살표가 보이는 상태에서 원하는 위치를 클릭해야 이동합니다. 클릭 전에는 전진하지 않습니다.');
     };
 
     document.getElementById('retreatBtn').onclick = () => {
@@ -1757,10 +1721,12 @@
     });
 
     els.field.addEventListener('mouseleave', () => {
-      if (!state.activeMoveOrder) {
+      if (!state.activeMoveOrder && state.assaultMode) {
+        state.orderPreview = { active: true, x: FRIENDLY_SAFE_X + 140, y: SAFE_Y };
+      } else if (!state.activeMoveOrder) {
         state.orderPreview = { active: false, x: 0, y: 0 };
-        renderOrderArrow();
       }
+      renderOrderArrow();
     });
 
     els.field.addEventListener('click', (e) => {
@@ -1793,9 +1759,9 @@
 
       if (state.winner || state.prepActive || !state.assaultMode) return;
       state.activeMoveOrder = { x, y };
-      state.orderPreview = { active: true, x, y };
-      setNotice('이동 명령 완료! 해당 지점으로 이동 후 근처 적과 금고를 노립니다.');
+      state.orderPreview = { active: false, x: 0, y: 0 };
       renderOrderArrow();
+      setNotice('이동 명령 완료! 해당 지점으로 이동 후 근처 적과 금고를 노립니다.');
     });
 
     renderRecentCountries();
