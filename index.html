@@ -946,6 +946,28 @@
       return null;
     }
 
+    function formatNumberShort(value) {
+      const n = Number(value);
+      if (!Number.isFinite(n)) return String(value);
+      const abs = Math.abs(n);
+      const units = [
+        { v: 1e18, s: 'qq' },
+        { v: 1e15, s: 'q' },
+        { v: 1e12, s: 't' },
+        { v: 1e9, s: 'b' },
+        { v: 1e6, s: 'm' },
+        { v: 1e3, s: 'k' },
+      ];
+      for (const u of units) {
+        if (abs >= u.v) {
+          const num = n / u.v;
+          const fixed = Math.abs(num) >= 100 ? num.toFixed(0) : Math.abs(num) >= 10 ? num.toFixed(1) : num.toFixed(2);
+          return fixed.replace(/\.0+$/, '').replace(/(\.\d*[1-9])0+$/, '$1') + u.s;
+        }
+      }
+      return Math.floor(n).toString();
+    }
+
     function updateLobbyProfileUI() {
       const rank = getCurrentRankInfo(state.trophies);
       els.openTrophyBtn.textContent = `🏆 ${state.trophies} · ${rank.name}`;
@@ -980,7 +1002,7 @@
         row.innerHTML = `
           <div style="display:flex; justify-content:space-between; gap:10px; align-items:center; flex-wrap:wrap;">
             <div style="font-weight:900; color:${r.color};">${r.name}${isCurrent ? ' · 현재 등급' : reached ? ' · 달성' : ''}</div>
-            <div style="color:#cbd5e1; font-size:14px;">목표 ${r.min} 트로피 · 보상 ${r.reward} 코인</div>
+            <div style="color:#cbd5e1; font-size:14px;">목표 ${r.min} 트로피 · 보상 ${formatNumberShort(r.reward)} 코인</div>
           </div>
           <div style="color:#94a3b8; margin-top:4px; font-size:14px;">${nextRank ? `${nextRank.name} 전 단계` : '최종 등급'}</div>
         `;
@@ -1011,7 +1033,7 @@
       if (level === 0) return 100;
       if (level <= EARLY_SAFE_UPGRADES.length) return EARLY_SAFE_UPGRADES[level - 1].income;
       const extra = level - EARLY_SAFE_UPGRADES.length;
-      return Math.floor(20000 * Math.pow(1.5, Math.max(0, extra - 1)));
+      return Math.floor(1500 * Math.pow(1.5, extra));
     }
 
     function nextSafeCost(level) {
@@ -1053,9 +1075,17 @@
     function createUnit(team, rankIndex, x, y) {
       const r = RANKS[rankIndex];
       return {
-        id: uid(), team, rankIndex, x, y,
-        hp: r.hp, maxHp: r.hp, atk: r.atk, speed: r.speed,
-        attackCooldown: 0, engaged: false,
+        id: uid(),
+        team,
+        rankIndex,
+        x,
+        y,
+        hp: r.hp,
+        maxHp: r.hp,
+        atk: r.atk,
+        speed: r.speed,
+        attackCooldown: 0,
+        engaged: false,
       };
     }
 
@@ -1096,7 +1126,7 @@
       state.playerSafeExploding = false;
       state.enemySafeExploding = false;
       state.units = [];
-      state.ai = { timer: 0, nextActionAt: 1200, stance: 'defend' };
+      state.ai = { timer: 0, nextActionAt: 1200, stance: 'defend', lockedMs: 0 };
       state.prepRemaining = PREP_MS;
       state.prepActive = true;
       state.enemyCountryName = randomEnemyName();
@@ -1230,7 +1260,7 @@
           state.enemyRankIndex += 1;
           return;
         }
-        if (enemyCount < MAX_UNITS_PER_TEAM && state.enemyCoins >= eSummonCost && (enemyCount < 4 || Math.random() < pattern.summon)) {
+        if (enemyCount < MAX_UNITS_PER_TEAM && state.enemyCoins >= eSummonCost) {
           state.enemyCoins -= eSummonCost;
           state.units.push(createUnit('enemy', state.enemyRankIndex, ENEMY_SAFE_X - 70 - Math.random() * 22, SAFE_Y + (Math.random() * 70 - 35)));
         }
@@ -1254,26 +1284,18 @@
       const shouldRank = state.enemyRankIndex < state.playerRankIndex || (enemyUnits.length >= 3 && Math.random() < pattern.rank);
       const wantArmy = Math.min(MAX_UNITS_PER_TEAM, Math.max(4, Math.ceil(playerUnits.length * (state.ai.stance === 'aggressive' ? 1.12 : 0.92))));
 
-      if (!hasReserve && enemyCount >= Math.max(3, playerUnits.length) && Math.random() < 0.45) {
-        state.units.forEach(u => {
-          if (u.team === 'enemy') u.engaged = false;
-        });
-        return;
-      }
-
-      const roll = Math.random();
-      if (shouldEco && state.enemyCoins >= enemySafeCost && roll < pattern.eco) {
+      if (shouldEco && state.enemyCoins >= enemySafeCost && (state.enemyCoins >= enemySafeCost || enemyCount >= 2)) {
         state.enemyCoins -= enemySafeCost;
         state.enemySafeUpgradeLevel += 1;
         const newMax = currentSafeMaxHp(state.enemySafeUpgradeLevel);
         const delta = newMax - state.enemySafeMaxHp;
         state.enemySafeMaxHp = newMax;
         state.enemySafeHp += delta;
-      } else if (shouldRank && state.enemyCoins >= enemyRankCost && roll < Math.max(pattern.rank, 0.35)) {
+      } else if (shouldRank && state.enemyCoins >= enemyRankCost && (state.enemyCoins >= enemyRankCost || enemyCount >= 2)) {
         state.enemyCoins -= enemyRankCost;
         state.enemyRankIndex += 1;
-      } else if (enemyCount < wantArmy && state.enemyCoins >= eSummonCost && roll < Math.max(pattern.summon, 0.4)) {
-        const summonTimes = state.enemyCoins >= eSummonCost * 2.8 && enemyCount + 1 < wantArmy && pattern.summon > 0.7 ? 2 : 1;
+      } else if (enemyCount < wantArmy && state.enemyCoins >= eSummonCost) {
+        const summonTimes = state.enemyCoins >= eSummonCost * 2.5 && enemyCount + 1 < wantArmy ? 2 : 1;
         for (let i = 0; i < summonTimes; i++) {
           if (teamCount('enemy') >= MAX_UNITS_PER_TEAM) break;
           if (state.enemyCoins < eSummonCost) break;
@@ -1282,18 +1304,15 @@
         }
       }
 
-      const canPush = state.enemyRankIndex >= state.playerRankIndex || enemyUnits.length >= playerUnits.length || state.enemyCoins > eSummonCost * pattern.reserve;
       const shouldRetreat = pressureOnEnemy && enemyUnits.length + 1 < playerUnits.length && state.ai.stance === 'defend';
       state.units.forEach(u => {
         if (u.team === 'enemy') {
           if (state.ai.stance === 'aggressive') u.engaged = true;
           else if (shouldRetreat) u.engaged = false;
-          else if (state.ai.stance === 'defend') u.engaged = false;
-          else u.engaged = pressureOnPlayer && canPush;
+          else u.engaged = false;
         }
       });
     }
-
     function updateUnits() {
       const next = state.units.map(u => ({ ...u }));
       let playerSafeHp = state.playerSafeHp;
@@ -1350,7 +1369,12 @@
             activeEnemy.hp -= u.atk;
             u.attackCooldown = 780;
           }
-        } else if (!order && u.team === 'enemy' && canFollowOrder && inSafeRange) {
+        } else if (u.team === 'player' && canFollowOrder && inSafeRange) {
+          if (u.attackCooldown <= 0) {
+            enemySafeHp -= u.atk;
+            u.attackCooldown = 820;
+          }
+        } else if (u.team === 'enemy' && canFollowOrder && inSafeRange) {
           if (u.attackCooldown <= 0) {
             playerSafeHp -= u.atk;
             u.attackCooldown = 820;
@@ -1394,7 +1418,9 @@
       state.enemySafeHp = Math.max(0, enemySafeHp);
 
       if (state.activeMoveOrder) {
-        const allNear = state.units.filter(u => u.team === 'player').every(u => Math.hypot(u.x - state.activeMoveOrder.x, u.y - state.activeMoveOrder.y) < 24 || u.hp <= 0);
+        const allNear = state.units
+          .filter(u => u.team === 'player')
+          .every(u => Math.hypot(u.x - state.activeMoveOrder.x, u.y - state.activeMoveOrder.y) < 24 || u.hp <= 0);
         if (allNear) state.activeMoveOrder = null;
       }
 
@@ -1413,27 +1439,27 @@
     function renderBattle() {
       const pIncome = currentIncome(state.safeUpgradeLevel);
       const eIncome = currentIncome(state.enemySafeUpgradeLevel);
-      els.playerBadge.textContent = `${state.countryName} · ${Math.floor(state.coins)} 코인 · ${pIncome}/s`;
-      els.enemyBadge.textContent = `${state.enemyCountryName || '적군'} · ${Math.floor(state.enemyCoins)} 코인 · ${eIncome}/s`;
+      els.playerBadge.textContent = `${state.countryName} · ${formatNumberShort(state.coins)} 코인 · ${formatNumberShort(pIncome)}/s`;
+      els.enemyBadge.textContent = `${state.enemyCountryName || '적군'} · ${formatNumberShort(state.enemyCoins)} 코인 · ${formatNumberShort(eIncome)}/s`;
 
       const safeCost = nextSafeCost(state.safeUpgradeLevel);
-      els.safeCurrent.textContent = `현재 생산량: ${pIncome}/s · 현재 체력: ${Math.floor(state.playerSafeMaxHp)}`;
-      els.safeNext.textContent = `다음 생산량: ${currentIncome(state.safeUpgradeLevel + 1)}/s · 다음 체력: ${Math.floor(currentSafeMaxHp(state.safeUpgradeLevel + 1))}`;
-      els.safeCost.textContent = safeCost;
+      els.safeCurrent.textContent = `현재 생산량: ${formatNumberShort(pIncome)}/s · 현재 체력: ${formatNumberShort(state.playerSafeMaxHp)}`;
+      els.safeNext.textContent = `다음 생산량: ${formatNumberShort(currentIncome(state.safeUpgradeLevel + 1))}/s · 다음 체력: ${formatNumberShort(currentSafeMaxHp(state.safeUpgradeLevel + 1))}`;
+      els.safeCost.textContent = formatNumberShort(safeCost);
 
       const rank = RANKS[state.playerRankIndex];
       const nextR = RANKS[Math.min(RANKS.length - 1, state.playerRankIndex + 1)];
       els.rankCurrent.innerHTML = `현재 등급: <span style="color:${rank.color}; font-weight:900;">${formatRank(state.playerRankIndex)}</span>`;
       els.rankNext.innerHTML = `다음 등급: ${state.playerRankIndex < RANKS.length - 1 ? `<span style="color:${nextR.color}; font-weight:900;">${formatRank(state.playerRankIndex + 1)}</span>` : '최대'}`;
-      els.rankCost.textContent = state.playerRankIndex < RANKS.length - 1 ? nextRankCost(state.playerRankIndex) : 'MAX';
+      els.rankCost.textContent = state.playerRankIndex < RANKS.length - 1 ? formatNumberShort(nextRankCost(state.playerRankIndex)) : 'MAX';
       els.rankCost.style.color = rank.color;
       els.rankCost.style.borderColor = rank.color;
       els.rankCost.style.background = rank.color + '22';
 
       const summon = summonCost(state.playerRankIndex);
       els.summonNow.innerHTML = `현재 소환 군사: <span style="color:${rank.color}; font-weight:900;">${formatRank(state.playerRankIndex)}</span>`;
-      els.summonCostText.textContent = `소환 비용: ${summon} · 최대 10명`;
-      els.summonCostBadge.textContent = summon;
+      els.summonCostText.textContent = `소환 비용: ${formatNumberShort(summon)} · 최대 10명`;
+      els.summonCostBadge.textContent = formatNumberShort(summon);
       els.summonCostBadge.style.color = rank.color;
       els.summonCostBadge.style.borderColor = rank.color;
       els.summonCostBadge.style.background = rank.color + '22';
@@ -1461,8 +1487,8 @@
     function renderSafeBars() {
       els.playerSafeFill.style.width = (state.playerSafeHp / state.playerSafeMaxHp) * 100 + '%';
       els.enemySafeFill.style.width = (state.enemySafeHp / state.enemySafeMaxHp) * 100 + '%';
-      els.playerSafeText.textContent = `${Math.ceil(state.playerSafeHp)} / ${Math.floor(state.playerSafeMaxHp)}`;
-      els.enemySafeText.textContent = `${Math.ceil(state.enemySafeHp)} / ${Math.floor(state.enemySafeMaxHp)}`;
+      els.playerSafeText.textContent = `${formatNumberShort(state.playerSafeHp)} / ${formatNumberShort(state.playerSafeMaxHp)}`;
+      els.enemySafeText.textContent = `${formatNumberShort(state.enemySafeHp)} / ${formatNumberShort(state.enemySafeMaxHp)}`;
     }
 
     function renderCounts() {
@@ -1511,7 +1537,7 @@
       saveProfile();
       updateLobbyProfileUI();
       const deltaText = result === 'win' ? '+10 트로피' : '-4 트로피';
-      return rewardCoins > 0 ? `${deltaText} · 승급 보상 +${rewardCoins} 코인` : deltaText;
+      return rewardCoins > 0 ? `${deltaText} · 승급 보상 +${formatNumberShort(rewardCoins)} 코인` : deltaText;
     }
 
     function playerBuySafeUpgrade() {
@@ -1527,7 +1553,7 @@
       const delta = newMax - state.playerSafeMaxHp;
       state.playerSafeMaxHp = newMax;
       state.playerSafeHp += delta;
-      setNotice(`금고 생산량이 ${currentIncome(state.safeUpgradeLevel)}/s 로 강화되고 체력도 크게 증가했습니다!`);
+      setNotice(`금고 생산량이 ${formatNumberShort(currentIncome(state.safeUpgradeLevel))}/s 로 강화되고 체력도 크게 증가했습니다!`);
       renderBattle();
     }
 
@@ -1655,13 +1681,24 @@
       renderTrophyOverlay();
       els.trophyOverlay.classList.add('show');
     };
-    document.getElementById('closeTrophyBtn').onclick = () => { els.trophyOverlay.classList.remove('show'); };
+
+    document.getElementById('closeTrophyBtn').onclick = () => {
+      els.trophyOverlay.classList.remove('show');
+    };
+
     document.getElementById('backToSetupBtn').onclick = () => {
       showScreen('setup');
       renderRecentCountries();
     };
-    document.getElementById('openMapBtn').onclick = () => { els.mapOverlay.classList.add('show'); };
-    document.getElementById('closeMapBtn').onclick = () => { els.mapOverlay.classList.remove('show'); };
+
+    document.getElementById('openMapBtn').onclick = () => {
+      els.mapOverlay.classList.add('show');
+    };
+
+    document.getElementById('closeMapBtn').onclick = () => {
+      els.mapOverlay.classList.remove('show');
+    };
+
     document.getElementById('selectMapBtn').onclick = () => {
       state.selectedMap = '1 vs 1 경기장';
       els.selectedMapText.textContent = `선택 맵: ${state.selectedMap}`;
@@ -1710,7 +1747,7 @@
     };
 
     els.field.addEventListener('mousemove', (e) => {
-      if (state.winner || state.prepActive || !state.assaultMode) return;
+      if (state.winner || state.prepActive || !state.assaultMode || state.activeMoveOrder) return;
       const rect = els.field.getBoundingClientRect();
       state.orderPreview = {
         active: true,
@@ -1721,9 +1758,11 @@
     });
 
     els.field.addEventListener('mouseleave', () => {
-      if (!state.activeMoveOrder && state.assaultMode) {
+      if (state.activeMoveOrder) {
+        state.orderPreview = { active: false, x: 0, y: 0 };
+      } else if (state.assaultMode) {
         state.orderPreview = { active: true, x: FRIENDLY_SAFE_X + 140, y: SAFE_Y };
-      } else if (!state.activeMoveOrder) {
+      } else {
         state.orderPreview = { active: false, x: 0, y: 0 };
       }
       renderOrderArrow();
@@ -1760,6 +1799,7 @@
       if (state.winner || state.prepActive || !state.assaultMode) return;
       state.activeMoveOrder = { x, y };
       state.orderPreview = { active: false, x: 0, y: 0 };
+      state.assaultMode = false;
       renderOrderArrow();
       setNotice('이동 명령 완료! 해당 지점으로 이동 후 근처 적과 금고를 노립니다.');
     });
